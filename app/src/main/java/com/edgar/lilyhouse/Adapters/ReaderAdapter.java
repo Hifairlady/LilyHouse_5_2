@@ -55,4 +55,9 @@ public class ReaderAdapter extends BaseAdapter {
 
         return itemView;
     }
+
+    public void stopPicasso() {
+        imageUtil.shutdownPicasso();
+    }
+
 }

@@ -85,4 +85,9 @@ public class ReaderActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        adapter.stopPicasso();
+    }
 }

@@ -47,7 +47,6 @@ public class ImageUtil {
                 .downloader(new OkHttp3Downloader(client))
                 .defaultBitmapConfig(Bitmap.Config.RGB_565)
                 .build();
-
     }
 
 
@@ -113,7 +112,6 @@ public class ImageUtil {
     public void setImageView(ImageView imageView, String urlString) {
         picasso.load(urlString).placeholder(R.drawable.loading_white_bg)
                 .error(R.drawable.error_white_bg).into(imageView);
-
     }
 
     public void setCircularImage(ImageView imageView, String urlString) {
@@ -157,5 +155,11 @@ public class ImageUtil {
                 .placeholder(R.drawable.ic_authors_circle)
                 .error(R.drawable.ic_authors_circle).into(imageView);
     }
+
+    public void shutdownPicasso() {
+        picasso.shutdown();
+    }
+
+
 }
 
