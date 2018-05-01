@@ -1,7 +1,6 @@
 package com.edgar.lilyhouse.Controllers;
 
 import android.os.Handler;
-import android.util.Log;
 
 import com.edgar.lilyhouse.Items.SearchResultItem;
 import com.edgar.lilyhouse.Utils.HtmlParser;
@@ -15,16 +14,16 @@ import org.jsoup.select.Elements;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public class SearchDataController {
+public class SearchController {
 
     private ArrayList<SearchResultItem> searchResultItems = null;
 
 
-    private static final SearchDataController instance = new SearchDataController();
+    private static final SearchController instance = new SearchController();
 
-    private SearchDataController() {}
+    private SearchController() {}
 
-    public static SearchDataController getInstance() {
+    public static SearchController getInstance() {
         return instance;
     }
 

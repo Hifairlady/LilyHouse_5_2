@@ -13,13 +13,13 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public class MainDataController {
+public class MainController {
 
-    private static final MainDataController instance = new MainDataController();
+    private static final MainController instance = new MainController();
 
-    private MainDataController() {}
+    private MainController() {}
 
-    public static MainDataController getInstance() {
+    public static MainController getInstance() {
         return instance;
     }
 

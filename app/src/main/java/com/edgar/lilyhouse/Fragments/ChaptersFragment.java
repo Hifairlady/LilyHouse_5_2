@@ -16,8 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.edgar.lilyhouse.Adapters.GridViewExAdapter;
-import com.edgar.lilyhouse.Controllers.MangaDataController;
+import com.edgar.lilyhouse.Adapters.GridExAdapter;
+import com.edgar.lilyhouse.Controllers.MangaController;
 import com.edgar.lilyhouse.GridViewEx;
 import com.edgar.lilyhouse.Items.ChapterItem;
 import com.edgar.lilyhouse.R;
@@ -47,7 +47,7 @@ public class ChaptersFragment extends Fragment {
     private boolean isDataLoading = true;
 
     private ArrayList<ChapterItem> chapterItems = new ArrayList<>();
-    private GridViewExAdapter[] adapters = new GridViewExAdapter[0];
+    private GridExAdapter[] adapters = new GridExAdapter[0];
 
     public ChaptersFragment() { }
 
@@ -96,7 +96,7 @@ public class ChaptersFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        MangaDataController.getInstance().setupChaptersList(queryUrl, getChaptersHandler);
+        MangaController.getInstance().setupChaptersList(queryUrl, getChaptersHandler);
     }
 
     @SuppressLint("HandlerLeak")
@@ -108,11 +108,11 @@ public class ChaptersFragment extends Fragment {
             switch (msg.what) {
                 case R.integer.get_data_success:
                     if (isFragDestroyed) return;
-                    chapterItems = MangaDataController.getInstance().getChapterItems();
+                    chapterItems = MangaController.getInstance().getChapterItems();
                     for (int i = 0; i < chapterItems.size(); i++) {
                         addCardsToContainer(lvContainer, chapterItems.get(i));
                     }
-                    tvIntro.setText(MangaDataController.getInstance().getIntroString());
+                    tvIntro.setText(MangaController.getInstance().getIntroString());
                     isDataLoading = false;
                     break;
 
@@ -173,7 +173,7 @@ public class ChaptersFragment extends Fragment {
         TextView tvTotal = view.findViewById(R.id.tv_total_chapters);
 
         final GridViewEx gridView = view.findViewById(R.id.chapter_gridview);
-        GridViewExAdapter adapter = new GridViewExAdapter(getContext(), chapterItem);
+        GridExAdapter adapter = new GridExAdapter(getContext(), chapterItem);
         adapters = Arrays.copyOf(adapters, adapters.length + 1);
         adapters[adapters.length - 1] = adapter;
 

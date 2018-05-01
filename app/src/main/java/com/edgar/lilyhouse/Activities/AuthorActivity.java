@@ -11,15 +11,15 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.edgar.lilyhouse.Adapters.MangaListAdapter;
-import com.edgar.lilyhouse.Controllers.AuthorMangasDataController;
+import com.edgar.lilyhouse.Adapters.MangaAdapter;
+import com.edgar.lilyhouse.Controllers.AuthorController;
 import com.edgar.lilyhouse.R;
 
-public class AuthorDetailActivity extends AppCompatActivity {
-    private static final String TAG = "=================" + AuthorDetailActivity.class.getSimpleName();
+public class AuthorActivity extends AppCompatActivity {
+    private static final String TAG = "=================" + AuthorActivity.class.getSimpleName();
 
     private RecyclerView recyclerView;
-    private MangaListAdapter adapter;
+    private MangaAdapter adapter;
 
 
     @Override
@@ -46,16 +46,16 @@ public class AuthorDetailActivity extends AppCompatActivity {
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(layoutManager);
 
-        AuthorMangasDataController.getInstance().setupMangaList(queryUrl, getMangasHandler);
+        AuthorController.getInstance().setupMangaList(queryUrl, getMangasHandler);
     }
 
-    MangaListAdapter.ItemClickListener itemClickListener = new MangaListAdapter.ItemClickListener() {
+    MangaAdapter.ItemClickListener itemClickListener = new MangaAdapter.ItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            Intent infoIntent = new Intent(AuthorDetailActivity.this, MangaDetailActivity.class);
+            Intent infoIntent = new Intent(AuthorActivity.this, MangaActivity.class);
             infoIntent.putExtra(getString(R.string.info_title_string_extra),
-                    AuthorMangasDataController.getInstance().getMangaItems().get(position).getName());
-            String urlString = AuthorMangasDataController.getInstance().getMangaItems()
+                    AuthorController.getInstance().getMangaItems().get(position).getName());
+            String urlString = AuthorController.getInstance().getMangaItems()
                     .get(position).getQueryInfoUrl();
             infoIntent.putExtra(getString(R.string.info_url_string_extra), urlString);
             startActivity(infoIntent);
@@ -71,8 +71,8 @@ public class AuthorDetailActivity extends AppCompatActivity {
             switch (msg.what) {
 
                 case R.integer.get_data_success:
-                    adapter = new MangaListAdapter(AuthorDetailActivity.this,
-                            AuthorMangasDataController.getInstance().getMangaItems(), true);
+                    adapter = new MangaAdapter(AuthorActivity.this,
+                            AuthorController.getInstance().getMangaItems(), true);
                     adapter.setOnItemClickListener(itemClickListener);
                     recyclerView.setAdapter(adapter);
                     break;

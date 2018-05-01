@@ -1,6 +1,7 @@
 package com.edgar.lilyhouse.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,16 +10,17 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.edgar.lilyhouse.Activities.ReaderActivity;
 import com.edgar.lilyhouse.Items.ChapterItem;
 import com.edgar.lilyhouse.R;
 
-public class GridViewExAdapter extends BaseAdapter {
+public class GridExAdapter extends BaseAdapter {
 
     private Context context;
     private ChapterItem chapterItem;
     private SharedPreferences sharedPreferences;
 
-    public GridViewExAdapter(Context context, ChapterItem chapterItem) {
+    public GridExAdapter(Context context, ChapterItem chapterItem) {
         this.context = context;
         this.chapterItem = chapterItem;
         this.sharedPreferences = context.getSharedPreferences("WATCH_STATE", Context.MODE_PRIVATE);
@@ -57,6 +59,17 @@ public class GridViewExAdapter extends BaseAdapter {
                 // TODO: 2018\5\1 chapter item click event
                 storeWatchState(String.valueOf(chapterItem.getData().get(position).getId()), true);
                 tvNew.setVisibility(View.GONE);
+
+                String urlString = "https://m.dmzj.com/view/" + chapterItem.getData().get(position).getComic_id() +
+                        "/" + chapterItem.getData().get(position).getId() + ".html";
+
+                Intent readerIntent = new Intent(context, ReaderActivity.class);
+                readerIntent.putExtra(context.getString(R.string.info_title_string_extra),
+                        chapterItem.getData().get(position).getChapter_name());
+                readerIntent.putExtra(context.getString(R.string.info_url_string_extra), urlString);
+                context.startActivity(readerIntent);
+
+
             }
         });
         if ( sharedPreferences.getBoolean(String.valueOf(chapterItem.getData().get(position).getId()), false ) )

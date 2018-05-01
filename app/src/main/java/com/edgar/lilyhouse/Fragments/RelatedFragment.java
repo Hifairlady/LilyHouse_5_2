@@ -18,9 +18,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.edgar.lilyhouse.Activities.MangaDetailActivity;
-import com.edgar.lilyhouse.Adapters.MangaListAdapter;
-import com.edgar.lilyhouse.Controllers.MangaDataController;
+import com.edgar.lilyhouse.Activities.MangaActivity;
+import com.edgar.lilyhouse.Adapters.MangaAdapter;
+import com.edgar.lilyhouse.Controllers.MangaController;
 import com.edgar.lilyhouse.R;
 
 public class RelatedFragment extends Fragment {
@@ -76,7 +76,7 @@ public class RelatedFragment extends Fragment {
         btnRetry = view.findViewById(R.id.btn_error_retry);
         btnRetry.setOnClickListener(mOnClickListener);
 
-        MangaDataController.getInstance().setupRelated(queryUrl, getRelatedHandler);
+        MangaController.getInstance().setupRelated(queryUrl, getRelatedHandler);
 
     }
 
@@ -93,15 +93,15 @@ public class RelatedFragment extends Fragment {
 
                     cvNoData.setVisibility(View.GONE);
                     lvHasData.setVisibility(View.VISIBLE);
-                    if (MangaDataController.getInstance().getRelatedAuthorName() == null) {
+                    if (MangaController.getInstance().getRelatedAuthorName() == null) {
                         cvNoData.setVisibility(View.VISIBLE);
                         return;
                     }
-                    tvAuthor.setText(MangaDataController.getInstance().getRelatedAuthorName());
+                    tvAuthor.setText(MangaController.getInstance().getRelatedAuthorName());
 //                        btnRetry.setClickable(true);
 
-                    MangaListAdapter adapter1 = new MangaListAdapter(getContext(), MangaDataController.getInstance().getMangaItems1(), true);
-                    MangaListAdapter adapter2 = new MangaListAdapter(getContext(), MangaDataController.getInstance().getMangaItems2(), true);
+                    MangaAdapter adapter1 = new MangaAdapter(getContext(), MangaController.getInstance().getMangaItems1(), true);
+                    MangaAdapter adapter2 = new MangaAdapter(getContext(), MangaController.getInstance().getMangaItems2(), true);
 
                     GridLayoutManager layoutManager1 = new GridLayoutManager(getContext(), 3);
                     recyclerView1.setLayoutManager(layoutManager1);
@@ -127,25 +127,25 @@ public class RelatedFragment extends Fragment {
         }
     };
 
-    private MangaListAdapter.ItemClickListener mItemClickListener1 = new MangaListAdapter.ItemClickListener() {
+    private MangaAdapter.ItemClickListener mItemClickListener1 = new MangaAdapter.ItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            Intent infoIntent = new Intent(getContext(), MangaDetailActivity.class);
+            Intent infoIntent = new Intent(getContext(), MangaActivity.class);
             infoIntent.putExtra(getContext().getString(R.string.info_title_string_extra),
-                    MangaDataController.getInstance().getMangaItems1().get(position).getName());
-            String urlString = MangaDataController.getInstance().getMangaItems1().get(position).getQueryInfoUrl();
+                    MangaController.getInstance().getMangaItems1().get(position).getName());
+            String urlString = MangaController.getInstance().getMangaItems1().get(position).getQueryInfoUrl();
             infoIntent.putExtra(getContext().getString(R.string.info_url_string_extra), urlString);
             getContext().startActivity(infoIntent);
         }
     };
 
-    private MangaListAdapter.ItemClickListener mItemClickListener2 = new MangaListAdapter.ItemClickListener() {
+    private MangaAdapter.ItemClickListener mItemClickListener2 = new MangaAdapter.ItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            Intent infoIntent = new Intent(getContext(), MangaDetailActivity.class);
+            Intent infoIntent = new Intent(getContext(), MangaActivity.class);
             infoIntent.putExtra(getContext().getString(R.string.info_title_string_extra),
-                    MangaDataController.getInstance().getMangaItems2().get(position).getName());
-            String urlString = MangaDataController.getInstance().getMangaItems2().get(position).getQueryInfoUrl();
+                    MangaController.getInstance().getMangaItems2().get(position).getName());
+            String urlString = MangaController.getInstance().getMangaItems2().get(position).getQueryInfoUrl();
             infoIntent.putExtra(getContext().getString(R.string.info_url_string_extra), urlString);
             getContext().startActivity(infoIntent);
         }
@@ -159,7 +159,7 @@ public class RelatedFragment extends Fragment {
                 case R.id.btn_error_retry:
                     cvNoData.setVisibility(View.GONE);
                     lvHasData.setVisibility(View.VISIBLE);
-                    MangaDataController.getInstance().setupRelated(queryUrl, getRelatedHandler);
+                    MangaController.getInstance().setupRelated(queryUrl, getRelatedHandler);
                     btnRetry.setClickable(false);
 
                     break;

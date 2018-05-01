@@ -36,13 +36,13 @@ public class ReaderImageItem {
 //"comment_count": 1410
 //}
 
-    private int id, comic_id, chapter_order, chapter_type, chaptertype, chapter_true_type, chapter_num,
+    private int id, comic_id, chapter_order, chapter_type, chaptertype, chapter_true_type,
             sum_pages, sns_tag, uid, hidden, direction, filesize, high_file_size, picnum, hit, prev_chap_id, comment_count;
     long createtime, updatetime;
-    private String chapter_name, folder, username, translatorid, translator, link, message, download;
+    private String chapter_name, folder, username, translatorid, translator, link, message, chapter_num, download;
     private String[] page_url;
 
-    public ReaderImageItem(int id, int comic_id, int chapter_order, int chapter_type, int chaptertype, int chapter_true_type, int chapter_num, int sum_pages, int sns_tag, int uid, int hidden, int direction, int filesize, int high_file_size, int picnum, int hit, int prev_chap_id, int comment_count, long createtime, long updatetime, String chapter_name, String folder, String username, String translatorid, String translator, String link, String message, String download, String[] page_url) {
+    public ReaderImageItem(int id, int comic_id, int chapter_order, int chapter_type, int chaptertype, int chapter_true_type, String chapter_num, int sum_pages, int sns_tag, int uid, int hidden, int direction, int filesize, int high_file_size, int picnum, int hit, int prev_chap_id, int comment_count, long createtime, long updatetime, String chapter_name, String folder, String username, String translatorid, String translator, String link, String message, String download, String[] page_url) {
         this.id = id;
         this.comic_id = comic_id;
         this.chapter_order = chapter_order;
@@ -122,11 +122,11 @@ public class ReaderImageItem {
         this.chapter_true_type = chapter_true_type;
     }
 
-    public int getChapter_num() {
+    public String getChapter_num() {
         return chapter_num;
     }
 
-    public void setChapter_num(int chapter_num) {
+    public void setChapter_num(String chapter_num) {
         this.chapter_num = chapter_num;
     }
 

@@ -17,7 +17,7 @@ import org.jsoup.select.Elements;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public class MangaDataController {
+public class MangaController {
 
     private String introString, relatedAuthorName;
     private ArrayList<ChapterItem> chapterItems = new ArrayList<>();
@@ -30,11 +30,11 @@ public class MangaDataController {
     private CommentQueryArg commentQueryArg;
     private ArrayList<AuthorItem> authorItems = null;
 
-    private static final MangaDataController instance = new MangaDataController();
+    private static final MangaController instance = new MangaController();
 
-    private MangaDataController(){}
+    private MangaController(){}
 
-    public static MangaDataController getInstance() {
+    public static MangaController getInstance() {
         return instance;
     }
 

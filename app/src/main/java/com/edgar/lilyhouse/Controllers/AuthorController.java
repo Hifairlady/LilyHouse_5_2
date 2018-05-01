@@ -11,15 +11,15 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 
-public class AuthorMangasDataController {
+public class AuthorController {
 
     private ArrayList<MangaItem> mangaItems = null;
 
-    private static final AuthorMangasDataController instance = new AuthorMangasDataController();
+    private static final AuthorController instance = new AuthorController();
 
-    private AuthorMangasDataController() {}
+    private AuthorController() {}
 
-    public static AuthorMangasDataController getInstance() {
+    public static AuthorController getInstance() {
         return instance;
     }
 

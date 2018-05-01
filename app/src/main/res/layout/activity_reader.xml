@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.ReaderActivity">
+
+    <com.edgar.lilyhouse.ZoomListView
+        android:id="@+id/zlv_reader_layout"
+        android:divider="@null"
+        android:scrollbars="none"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!--<zhan.scrollzoomlist.ScrollZoomListView-->
+        <!--android:id="@+id/zlv_reader_layout"-->
+        <!--android:divider="@null"-->
+        <!--android:scrollbars="none"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
+
+</FrameLayout>

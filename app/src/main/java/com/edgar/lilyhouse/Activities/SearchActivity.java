@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.edgar.lilyhouse.Controllers.SearchDataController;
+import com.edgar.lilyhouse.Controllers.SearchController;
 import com.edgar.lilyhouse.Items.SearchResultItem;
 import com.edgar.lilyhouse.R;
 import com.edgar.lilyhouse.Utils.ImageUtil;
@@ -68,7 +68,7 @@ public class SearchActivity extends AppCompatActivity {
                     isSearching = true;
                     searchUrl = URLEncoder.encode(query);
                     searchUrl = SEARCH_PREFIX + searchUrl + ".html";
-                    SearchDataController.getInstance().setupSearchData(searchUrl, getSearchHandler);
+                    SearchController.getInstance().setupSearchData(searchUrl, getSearchHandler);
                 } else {
                     Snackbar.make(lvResultContainer, R.string.searching_string, Snackbar.LENGTH_SHORT).show();
                 }
@@ -89,6 +89,7 @@ public class SearchActivity extends AppCompatActivity {
         if (searchTextView == null) {
             return;
         }
+        searchTextView.setTextSize(12.f);
         searchTextView.setTextColor(getResources().getColor(R.color.primary_text));
         searchTextView.setHintTextColor(getResources().getColor(R.color.secondary_text));
         searchTextView.setHint(R.string.search_hint_string);
@@ -124,7 +125,7 @@ public class SearchActivity extends AppCompatActivity {
         quoteTextString = getQuoteText(quoteKeyString);
 
         if (quoteTextString == null) {
-            SearchDataController.getInstance().setupSearchUI(QUOTE_URL, getQuoteHandler);
+            SearchController.getInstance().setupSearchUI(QUOTE_URL, getQuoteHandler);
             quoteTextString = getQuoteText("QUOTE DEFAULT");
             if (quoteTextString == null) {
                 quoteTextString = getString(R.string.search_quote_text_string);
@@ -157,8 +158,8 @@ public class SearchActivity extends AppCompatActivity {
             switch (msg.what) {
 
                 case R.integer.get_data_success:
-                    storeQuoteText(quoteKeyString, SearchDataController.getInstance().getQuoteText(), false);
-                    tvQuote.setText(SearchDataController.getInstance().getQuoteText());
+                    storeQuoteText(quoteKeyString, SearchController.getInstance().getQuoteText(), false);
+                    tvQuote.setText(SearchController.getInstance().getQuoteText());
 
                     break;
 
@@ -179,15 +180,15 @@ public class SearchActivity extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case R.integer.get_data_success:
-                    String countString = "共 " + SearchDataController.getInstance()
+                    String countString = "共 " + SearchController.getInstance()
                             .getSearchResultItems().size() + " 条搜索结果";
                     tvSearchCount.setText(countString);
                     tvSearchCount.setVisibility(View.VISIBLE);
                     lvResultContainer.removeAllViews();
-                    for (int i = 0; i < SearchDataController.getInstance()
+                    for (int i = 0; i < SearchController.getInstance()
                             .getSearchResultItems().size(); i++) {
                         addViewToContainer(lvResultContainer,
-                                SearchDataController.getInstance().getSearchResultItems().get(i));
+                                SearchController.getInstance().getSearchResultItems().get(i));
                     }
                     isSearching = false;
                     break;
@@ -222,6 +223,7 @@ public class SearchActivity extends AppCompatActivity {
             urlString = "https://images.dmzj.com/" + urlString;
         }
         imageUtil.setImageView(ivCover, urlString);
+//        ImageUtil.setImageView(SearchActivity.this, ivCover, urlString);
 
         tvTitle.setText(resultItem.getName());
         tvAuthors.setText(resultItem.getAuthors());
@@ -239,7 +241,7 @@ public class SearchActivity extends AppCompatActivity {
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent infoIntent = new Intent(SearchActivity.this, MangaDetailActivity.class);
+                Intent infoIntent = new Intent(SearchActivity.this, MangaActivity.class);
                 infoIntent.putExtra(getString(R.string.info_title_string_extra), resultItem.getName());
                 String urlString = "https://m.dmzj.com/info/" + resultItem.getId() + ".html";
                 infoIntent.putExtra(getString(R.string.info_url_string_extra), urlString);

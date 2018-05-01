@@ -1,9 +1,7 @@
 package com.edgar.lilyhouse.Fragments;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,7 +17,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.edgar.lilyhouse.Controllers.CommentDataController;
+import com.edgar.lilyhouse.Activities.CommentsActivity;
+import com.edgar.lilyhouse.Controllers.CommentController;
 import com.edgar.lilyhouse.Items.CommentItem;
 import com.edgar.lilyhouse.R;
 import com.edgar.lilyhouse.Utils.ImageUtil;
@@ -97,7 +96,7 @@ public class CommentsFragment extends Fragment {
         btnLoadHotComments.setClickable(false);
         btnLoadAllComments.setClickable(false);
 
-        CommentDataController.getInstance().setupComments(hotUrl, hotJsonHandler);
+        CommentController.getInstance().setupComments(hotUrl, hotJsonHandler);
 
     }
 
@@ -123,7 +122,7 @@ public class CommentsFragment extends Fragment {
                     hotComments = new GsonBuilder().create().fromJson(jsonString, listType);
                     loadComments(lvHotCommentsContainer, hotComments);
                     btnLoadHotComments.setClickable(true);
-                    CommentDataController.getInstance().setupComments(allUrl, allJsonHandler);
+                    CommentController.getInstance().setupComments(allUrl, allJsonHandler);
                     break;
 
                 case R.integer.get_data_failed:
@@ -183,7 +182,7 @@ public class CommentsFragment extends Fragment {
 
             if (isFragDestroyed) return;
 
-            View outSideView = LayoutInflater.from(getContext()).inflate(R.layout.layout_outside_comment_item, null);
+            View outSideView = LayoutInflater.from(getContext()).inflate(R.layout.item_outside_comment, null);
             TextView tvTime = outSideView.findViewById(R.id.tv_comment_time);
             TextView tvLikeCount = outSideView.findViewById(R.id.tv_like_count);
             TextView tvCommentCount = outSideView.findViewById(R.id.tv_comment_count);
@@ -197,6 +196,7 @@ public class CommentsFragment extends Fragment {
             tvCommentCount.setText(String.valueOf(commentItems.get(i).getReply_amount()));
             tvUsername.setText(commentItems.get(i).getNickname());
             imageUtil.setCircularImage(ivAvatar, commentItems.get(i).getAvatar_url());
+//            ImageUtil.setCircularImage(getContext(), ivAvatar, commentItems.get(i).getAvatar_url());
 
             int genderResId = (commentItems.get(i).getSex() == 2) ? R.drawable.ic_female : R.drawable.ic_male;
             ivGender.setImageResource(genderResId);
@@ -232,7 +232,7 @@ public class CommentsFragment extends Fragment {
 
             if (isFragDestroyed) return;
 
-            View innerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_inner_comment_item, null);
+            View innerView = LayoutInflater.from(getContext()).inflate(R.layout.item_inner_comment, null);
             HtmlTextView tvInnerContent = innerView.findViewById(R.id.tv_inner_comment_content);
             TextView tvFloorNumber = innerView.findViewById(R.id.tv_comment_floor_number);
 
@@ -274,20 +274,19 @@ public class CommentsFragment extends Fragment {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                // TODO: 2018\5\1 check all comments activity
 
                 case R.id.btn_load_all_comments:
-//                    Intent allCommentIntent = new Intent(getContext(), CheckCommentsActivity.class);
-//                    allCommentIntent.putExtra("queryUrl", allUrl);
-//                    allCommentIntent.putExtra("titleString", "全部评论");
-//                    startActivity(allCommentIntent);
+                    Intent allCommentIntent = new Intent(getContext(), CommentsActivity.class);
+                    allCommentIntent.putExtra("queryUrl", allUrl);
+                    allCommentIntent.putExtra("titleString", "全部评论");
+                    startActivity(allCommentIntent);
                     break;
 
                 case R.id.btn_load_all_hot_comments:
-//                    Intent hotCommentIntent = new Intent(getContext(), CheckCommentsActivity.class);
-//                    hotCommentIntent.putExtra("queryUrl", hotUrl);
-//                    hotCommentIntent.putExtra("titleString", "全部热评");
-//                    startActivity(hotCommentIntent);
+                    Intent hotCommentIntent = new Intent(getContext(), CommentsActivity.class);
+                    hotCommentIntent.putExtra("queryUrl", hotUrl);
+                    hotCommentIntent.putExtra("titleString", "全部热评");
+                    startActivity(hotCommentIntent);
                     break;
 
                 default:

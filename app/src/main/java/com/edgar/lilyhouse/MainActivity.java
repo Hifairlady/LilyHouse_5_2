@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -21,10 +23,10 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.edgar.lilyhouse.Activities.MangaDetailActivity;
+import com.edgar.lilyhouse.Activities.MangaActivity;
 import com.edgar.lilyhouse.Activities.SearchActivity;
-import com.edgar.lilyhouse.Adapters.MangaListAdapter;
-import com.edgar.lilyhouse.Controllers.MainDataController;
+import com.edgar.lilyhouse.Adapters.MangaAdapter;
+import com.edgar.lilyhouse.Controllers.MainController;
 import com.edgar.lilyhouse.Items.MangaItem;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
 
@@ -47,11 +49,16 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout btnOrder;
     private LinearLayout btnRegion;
 
+    private FloatingActionButton fabTop;
+
     private Dialog filterDialog;
     private String queryUrl;
+    private boolean isLoadingNextPage = false;
+
+    private int scrollDistance = 0;
 
     private UltimateRecyclerView recyclerView;
-    private MangaListAdapter listAdapter;
+    private MangaAdapter listAdapter;
     private ArrayList<MangaItem> mangaItems = new ArrayList<>();
 
     private boolean isGridOn = true;
@@ -64,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar)findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
         toolbar.setLogo(R.drawable.ic_app_logo);
+
+        fabTop = (FloatingActionButton)findViewById(R.id.my_fab);
         filterDialog = new Dialog(this);
         filterDialog.setContentView(R.layout.layout_popup_filter);
         filterDialog.setCanceledOnTouchOutside(true);
@@ -76,6 +85,10 @@ public class MainActivity extends AppCompatActivity {
         btnOrder.setOnClickListener(mOnClickListener);
         btnRegion.setOnClickListener(mOnClickListener);
 
+        fabTop.bringToFront();
+        fabTop.hide();
+        fabTop.setOnClickListener(mOnClickListener);
+
         setupFilters();
 
         Button btnFilterDismiss = filterDialog.findViewById(R.id.btn_filter_dismiss);
@@ -87,11 +100,11 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = (UltimateRecyclerView)findViewById(R.id.rv_main_manga);
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(layoutManager);
-        listAdapter = new MangaListAdapter(this, mangaItems, true);
+        listAdapter = new MangaAdapter(this, mangaItems, true);
         setupRecyclerView();
 
-        queryUrl = MainDataController.getInstance().getSortUrl(curStatusCode, curRegionCode, curOrderCode, curPageNum);
-        MainDataController.getInstance().loadMoreData(queryUrl, loadMoreHandler);
+        queryUrl = MainController.getInstance().getSortUrl(curStatusCode, curRegionCode, curOrderCode, curPageNum);
+        MainController.getInstance().loadMoreData(queryUrl, loadMoreHandler);
 
 
     }
@@ -113,17 +126,19 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.main_menu_action_grid:
                 isGridOn = !isGridOn;
+                scrollDistance = 0;
+                fabTop.hide();
                 if (!isGridOn) {
                     item.setIcon(R.drawable.ic_grid_on);
                     LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
                     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                     recyclerView.setLayoutManager(layoutManager);
-                    listAdapter = new MangaListAdapter(MainActivity.this, mangaItems, isGridOn);
+                    listAdapter = new MangaAdapter(MainActivity.this, mangaItems, isGridOn);
                 } else {
                     item.setIcon(R.drawable.ic_grid_off);
                     GridLayoutManager layoutManager = new GridLayoutManager(MainActivity.this, 3);
                     recyclerView.setLayoutManager(layoutManager);
-                    listAdapter = new MangaListAdapter(MainActivity.this, mangaItems, isGridOn);
+                    listAdapter = new MangaAdapter(MainActivity.this, mangaItems, isGridOn);
                 }
 
                 setupRecyclerView();
@@ -142,10 +157,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private MangaListAdapter.ItemClickListener itemClickListener = new MangaListAdapter.ItemClickListener() {
+    private MangaAdapter.ItemClickListener itemClickListener = new MangaAdapter.ItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            Intent infoIntent = new Intent(MainActivity.this, MangaDetailActivity.class);
+            Intent infoIntent = new Intent(MainActivity.this, MangaActivity.class);
             infoIntent.putExtra(getString(R.string.info_title_string_extra), mangaItems.get(position).getName());
             String urlString = "https://m.dmzj.com/info/" +
                     mangaItems.get(position).getId() + ".html";
@@ -158,6 +173,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
+
+                case R.id.my_fab:
+                    recyclerView.getLayoutManager().scrollToPosition(0);
+                    scrollDistance = 0;
+                    fabTop.hide();
+//                    Snackbar.make(recyclerView, "fab", Snackbar.LENGTH_SHORT).show();
+                    break;
 
                 case R.id.btn_filter_by_status:
                     PopupMenu popupStatusMenu = new PopupMenu(MainActivity.this, btnStatus);
@@ -225,18 +247,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         // TODO: 2018\4\30 remove this after test
         super.onDestroy();
-        MainDataController.getInstance().clearSharedPreference(this);
+        MainController.getInstance().clearSharedPreference(this);
     }
 
     private void setupFilters() {
 
-        curStatusCode = MainDataController.getInstance().getStoredIndices(MainActivity.this, "curStatusCode");
-        curRegionCode = MainDataController.getInstance().getStoredIndices(MainActivity.this, "curRegionCode");
-        curOrderCode = MainDataController.getInstance().getStoredIndices(MainActivity.this, "curOrderCode");
+        curStatusCode = MainController.getInstance().getStoredIndices(MainActivity.this, "curStatusCode");
+        curRegionCode = MainController.getInstance().getStoredIndices(MainActivity.this, "curRegionCode");
+        curOrderCode = MainController.getInstance().getStoredIndices(MainActivity.this, "curOrderCode");
 
-        curStatusString = MainDataController.getInstance().getStoredNames(MainActivity.this, "curStatusString");
-        curRegionString = MainDataController.getInstance().getStoredNames(MainActivity.this, "curRegionString");
-        curOrderString = MainDataController.getInstance().getStoredNames(MainActivity.this, "curOrderString");
+        curStatusString = MainController.getInstance().getStoredNames(MainActivity.this, "curStatusString");
+        curRegionString = MainController.getInstance().getStoredNames(MainActivity.this, "curRegionString");
+        curOrderString = MainController.getInstance().getStoredNames(MainActivity.this, "curOrderString");
 
         curStatusString = (curStatusString == null ? "全部" : curStatusString);
         curRegionString = (curRegionString == null ? "全部" : curRegionString);
@@ -255,19 +277,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void applyFilters() {
         curPageNum = 0;
-        queryUrl = MainDataController.getInstance().getSortUrl(curStatusCode, curRegionCode,
+        queryUrl = MainController.getInstance().getSortUrl(curStatusCode, curRegionCode,
                 curOrderCode, curPageNum);
 
         String[] filterNames = {curStatusString, curRegionString, curOrderString};
         int[] filterIndices = {curStatusCode, curRegionCode, curOrderCode};
 
-        MainDataController.getInstance().storeFilterNames(MainActivity.this, filterNames,
-                MainDataController.storeStringKeys);
-        MainDataController.getInstance().storeFilterIndices(MainActivity.this, filterIndices,
-                MainDataController.storeIntegerKeys);
+        MainController.getInstance().storeFilterNames(MainActivity.this, filterNames,
+                MainController.storeStringKeys);
+        MainController.getInstance().storeFilterIndices(MainActivity.this, filterIndices,
+                MainController.storeIntegerKeys);
 
-        queryUrl = MainDataController.getInstance().getSortUrl(curStatusCode, curRegionCode, curOrderCode, curPageNum);
-        MainDataController.getInstance().refreshData(queryUrl, refreshHandler);
+        queryUrl = MainController.getInstance().getSortUrl(curStatusCode, curRegionCode, curOrderCode, curPageNum);
+        MainController.getInstance().refreshData(queryUrl, refreshHandler);
 
     }
 
@@ -275,29 +297,50 @@ public class MainActivity extends AppCompatActivity {
 
         listAdapter.setOnItemClickListener(itemClickListener);
         recyclerView.setAdapter(listAdapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                scrollDistance = scrollDistance + dy;
+
+                int threshold = (isGridOn == true) ? 5000 : 10000;
+                if (scrollDistance > threshold) {
+                    fabTop.show();
+                } else {
+                    fabTop.hide();
+                }
+
+                if (isSlideToBottom(recyclerView) && !isLoadingNextPage) {
+                    curPageNum++;
+                    isLoadingNextPage = true;
+//                    Snackbar.make(recyclerView, "Loading next page...", Snackbar.LENGTH_SHORT).show();
+                    queryUrl = MainController.getInstance().getSortUrl(curStatusCode, curRegionCode,
+                            curOrderCode, curPageNum);
+                    MainController.getInstance().loadMoreData(queryUrl, loadMoreHandler);
+                }
+            }
+        });
 
         recyclerView.setDefaultOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 curPageNum = 0;
-                queryUrl = MainDataController.getInstance().getSortUrl(curStatusCode, curRegionCode,
+                queryUrl = MainController.getInstance().getSortUrl(curStatusCode, curRegionCode,
                         curOrderCode, curPageNum);
-                MainDataController.getInstance().refreshData(queryUrl, refreshHandler);
+                MainController.getInstance().refreshData(queryUrl, refreshHandler);
             }
         });
 
         recyclerView.setDefaultSwipeToRefreshColorScheme(0x000000);
 
-        recyclerView.setOnLoadMoreListener(new UltimateRecyclerView.OnLoadMoreListener() {
-            @Override
-            public void loadMore(int itemsCount, int maxLastVisiblePosition) {
-                curPageNum++;
-                Snackbar.make(recyclerView, "Load more", Snackbar.LENGTH_SHORT);
-                queryUrl = MainDataController.getInstance().getSortUrl(curStatusCode, curRegionCode,
-                        curOrderCode, curPageNum);
-                MainDataController.getInstance().loadMoreData(queryUrl, loadMoreHandler);
-            }
-        });
+    }
+
+    private boolean isSlideToBottom(RecyclerView recyclerView) {
+        if (isLoadingNextPage) return false;
+        if (recyclerView == null) return false;
+        return recyclerView.computeVerticalScrollExtent() + recyclerView.computeVerticalScrollOffset()
+                >= recyclerView.computeVerticalScrollRange();
     }
 
     @SuppressLint("HandlerLeak")
@@ -306,20 +349,20 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            isLoadingNextPage = false;
             switch (msg.what) {
                 case R.integer.get_data_success:
                     String jsonString = (String)msg.obj;
-                    ArrayList<MangaItem> items = MainDataController.getInstance().getDataFromJson(jsonString);
+                    recyclerView.setRefreshing(false);
+                    ArrayList<MangaItem> items = MainController.getInstance().getDataFromJson(jsonString);
                     if (items != null) {
 
                         mangaItems = new ArrayList<>(items);
-                        listAdapter = new MangaListAdapter(MainActivity.this, mangaItems, isGridOn);
+                        listAdapter = new MangaAdapter(MainActivity.this, mangaItems, isGridOn);
                         listAdapter.setOnItemClickListener(itemClickListener);
                         recyclerView.setAdapter(listAdapter);
-                        recyclerView.setRefreshing(false);
-                        recyclerView.reenableLoadmore();
                     } else {
-                        recyclerView.setRefreshing(false);
+//                        recyclerView.setRefreshing(false);
                         Snackbar.make(recyclerView, "没有数据", Snackbar.LENGTH_SHORT).show();
                     }
                     break;
@@ -345,18 +388,20 @@ public class MainActivity extends AppCompatActivity {
 
                 case R.integer.get_data_success:
                     String jsonString = (String)msg.obj;
-                    ArrayList<MangaItem> items = MainDataController.getInstance().getDataFromJson(jsonString);
+                    isLoadingNextPage = false;
+                    ArrayList<MangaItem> items = MainController.getInstance().getDataFromJson(jsonString);
                     if (items != null) {
                         mangaItems.addAll(items);
                         listAdapter.notifyDataSetChanged();
-                        recyclerView.reenableLoadmore();
                     } else {
+                        isLoadingNextPage = true;
                         Snackbar.make(recyclerView, "已全部加载", Snackbar.LENGTH_SHORT).show();
                     }
                     break;
 
                 case R.integer.get_data_failed:
                     String errorMsg = (String)msg.obj;
+                    isLoadingNextPage = false;
                     Snackbar.make(recyclerView, errorMsg, Snackbar.LENGTH_SHORT).show();
                     break;
 
@@ -365,14 +410,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
-
-
-
-
-
-
-
-
 
     //handle double click return key to exit
     @SuppressLint("HandlerLeak")

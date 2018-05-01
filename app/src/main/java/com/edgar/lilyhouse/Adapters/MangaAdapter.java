@@ -18,7 +18,7 @@ import com.marshalchen.ultimaterecyclerview.UltimateViewAdapter;
 
 import java.util.ArrayList;
 
-public class MangaListAdapter extends UltimateViewAdapter<MangaListAdapter.MangaViewHolder> {
+public class MangaAdapter extends UltimateViewAdapter<MangaAdapter.MangaViewHolder> {
 
     private ArrayList<MangaItem> mangaItems;
     private Context context;
@@ -26,7 +26,7 @@ public class MangaListAdapter extends UltimateViewAdapter<MangaListAdapter.Manga
     private ImageUtil imageUtil;
     private boolean isGridOn = false;
 
-    public MangaListAdapter(Context context, ArrayList<MangaItem> mangaItems, boolean isGridOn) {
+    public MangaAdapter(Context context, ArrayList<MangaItem> mangaItems, boolean isGridOn) {
         this.mangaItems = mangaItems;
         this.context = context;
         this.isGridOn = isGridOn;
@@ -97,6 +97,7 @@ public class MangaListAdapter extends UltimateViewAdapter<MangaListAdapter.Manga
             urlString = "https://images.dmzj.com/" + urlString;
         }
         imageUtil.setImageView(holder.ivCover, urlString);
+//        ImageUtil.setImageView(context, holder.ivCover, urlString);
 
 
     }

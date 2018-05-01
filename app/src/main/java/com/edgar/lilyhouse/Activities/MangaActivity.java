@@ -20,8 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.edgar.lilyhouse.Adapters.ViewPagerAdapter;
-import com.edgar.lilyhouse.Controllers.MainDataController;
-import com.edgar.lilyhouse.Controllers.MangaDataController;
+import com.edgar.lilyhouse.Controllers.MangaController;
 import com.edgar.lilyhouse.Fragments.ChaptersFragment;
 import com.edgar.lilyhouse.Fragments.CommentsFragment;
 import com.edgar.lilyhouse.Fragments.RelatedFragment;
@@ -32,9 +31,9 @@ import com.edgar.lilyhouse.Utils.ImageUtil;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class MangaDetailActivity extends AppCompatActivity {
+public class MangaActivity extends AppCompatActivity {
 
-    private static final String TAG = MangaDetailActivity.class.getSimpleName() + "WWWWWWWWWWWWWWWWWW";
+    private static final String TAG = MangaActivity.class.getSimpleName() + "WWWWWWWWWWWWWWWWWW";
 
     private String urlString;
 
@@ -86,19 +85,19 @@ public class MangaDetailActivity extends AppCompatActivity {
 
         viewPager = (ViewPager) findViewById(R.id.info_view_pager);
 
-        MangaDataController.getInstance().setupMangaInfos(urlString, getInfosHandler);
+        MangaController.getInstance().setupMangaInfos(urlString, getInfosHandler);
     }
 
     private void setupFragments() {
         fragments.clear();
-        Log.d(TAG, "setupFragments: " + MangaDataController.getInstance().getRelatedUrl());
-        fragments.add(RelatedFragment.newInstance(MangaDataController.getInstance().getRelatedUrl()));
+        Log.d(TAG, "setupFragments: " + MangaController.getInstance().getRelatedUrl());
+        fragments.add(RelatedFragment.newInstance(MangaController.getInstance().getRelatedUrl()));
         fragments.add(ChaptersFragment.newInstance(urlString));
 
         Date date = new Date();
         String dateString = String.valueOf(date.getTime());
 
-        CommentQueryArg commentQueryArg = MangaDataController.getInstance().getCommentQueryArg();
+        CommentQueryArg commentQueryArg = MangaController.getInstance().getCommentQueryArg();
         String allCommentUrl = "https://interface.dmzj.com/api/NewComment2/list?callback=comment_list_s&type=";
         allCommentUrl = allCommentUrl + commentQueryArg.getComment_type() + "&obj_id=" +
                 commentQueryArg.getObj_id() + "&hot=0&page_index=1";
@@ -137,14 +136,15 @@ public class MangaDetailActivity extends AppCompatActivity {
             switch (msg.what) {
 
                 case R.integer.get_data_success:
-                    tvLabelTime.setText(MangaDataController.getInstance().getTimeString());
-                    tvLabelStatus.setText(MangaDataController.getInstance().getStatusString());
-                    tvLabelTypes.setText(MangaDataController.getInstance().getTypeString());
-                    imageUtil.setImageView(ivCover, MangaDataController.getInstance().getCoverUrl());
+                    tvLabelTime.setText(MangaController.getInstance().getTimeString());
+                    tvLabelStatus.setText(MangaController.getInstance().getStatusString());
+                    tvLabelTypes.setText(MangaController.getInstance().getTypeString());
+                    imageUtil.setImageView(ivCover, MangaController.getInstance().getCoverUrl());
+//                    ImageUtil.setImageView(MangaActivity.this, ivCover, MangaController.getInstance().getCoverUrl());
                     authorContainer.removeAllViews();
-                    for (int i = 0; i < MangaDataController.getInstance().getAuthorItems().size(); i++) {
-                        addAuthorsView(authorContainer, MangaDataController.getInstance().getAuthorItems().get(i).getAuthorName(),
-                                MangaDataController.getInstance().getAuthorItems().get(i).getAuthorUrl());
+                    for (int i = 0; i < MangaController.getInstance().getAuthorItems().size(); i++) {
+                        addAuthorsView(authorContainer, MangaController.getInstance().getAuthorItems().get(i).getAuthorName(),
+                                MangaController.getInstance().getAuthorItems().get(i).getAuthorUrl());
                     }
                     setupFragments();
                     break;
@@ -167,7 +167,7 @@ public class MangaDetailActivity extends AppCompatActivity {
         tvAuthor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent authorIntent = new Intent(MangaDetailActivity.this, AuthorDetailActivity.class);
+                Intent authorIntent = new Intent(MangaActivity.this, AuthorActivity.class);
                 authorIntent.putExtra(getString(R.string.info_url_string_extra), authorUrl);
                 authorIntent.putExtra(getString(R.string.info_title_string_extra), authorName);
                 startActivity(authorIntent);
