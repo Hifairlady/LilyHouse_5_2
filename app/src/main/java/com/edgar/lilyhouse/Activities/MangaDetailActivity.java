@@ -20,13 +20,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.edgar.lilyhouse.Adapters.ViewPagerAdapter;
+import com.edgar.lilyhouse.Controllers.MainDataController;
 import com.edgar.lilyhouse.Controllers.MangaDataController;
 import com.edgar.lilyhouse.Fragments.ChaptersFragment;
+import com.edgar.lilyhouse.Fragments.CommentsFragment;
 import com.edgar.lilyhouse.Fragments.RelatedFragment;
+import com.edgar.lilyhouse.Items.CommentQueryArg;
 import com.edgar.lilyhouse.R;
 import com.edgar.lilyhouse.Utils.ImageUtil;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MangaDetailActivity extends AppCompatActivity {
 
@@ -34,7 +38,7 @@ public class MangaDetailActivity extends AppCompatActivity {
 
     private String urlString;
 
-    private String obj_id, authoruid, is_Original, comment_type, isToggle, dt;
+//    private String obj_id, authoruid, is_Original, comment_type, isToggle, dt;
 
     private ViewPager viewPager;
     private ViewPagerAdapter pagerAdapter;
@@ -89,22 +93,22 @@ public class MangaDetailActivity extends AppCompatActivity {
         fragments.clear();
         Log.d(TAG, "setupFragments: " + MangaDataController.getInstance().getRelatedUrl());
         fragments.add(RelatedFragment.newInstance(MangaDataController.getInstance().getRelatedUrl()));
-//        fragments.add(ChaptersFragment.newInstance(urlString));
         fragments.add(ChaptersFragment.newInstance(urlString));
-        fragments.add(ChaptersFragment.newInstance(urlString));
-//
-//        Date date = new Date();
-//        String dateString = String.valueOf(date.getTime());
-//
-//        String allCommentUrl = "https://interface.dmzj.com/api/NewComment2/list?callback=comment_list_s&type=";
-//        allCommentUrl = allCommentUrl + comment_type + "&obj_id=" + obj_id + "&hot=0&page_index=1";
-//        allCommentUrl = allCommentUrl + "&_=" + dateString;
-//
-//        String hotCommentUrl = "https://interface.dmzj.com/api/NewComment2/list?callback=hotComment_s&type=";
-//        hotCommentUrl = hotCommentUrl + comment_type + "&obj_id=" + obj_id + "&hot=1&page_index=1";
-//        hotCommentUrl = hotCommentUrl + "&_=" + dateString;
-//
-//        fragments.add(CommentsFragment.newInstance(allCommentUrl, hotCommentUrl));
+
+        Date date = new Date();
+        String dateString = String.valueOf(date.getTime());
+
+        CommentQueryArg commentQueryArg = MangaDataController.getInstance().getCommentQueryArg();
+        String allCommentUrl = "https://interface.dmzj.com/api/NewComment2/list?callback=comment_list_s&type=";
+        allCommentUrl = allCommentUrl + commentQueryArg.getComment_type() + "&obj_id=" +
+                commentQueryArg.getObj_id() + "&hot=0&page_index=1";
+        allCommentUrl = allCommentUrl + "&_=" + dateString;
+
+        String hotCommentUrl = "https://interface.dmzj.com/api/NewComment2/list?callback=hotComment_s&type=";
+        hotCommentUrl = hotCommentUrl + commentQueryArg.getComment_type() + "&obj_id=" + commentQueryArg.getObj_id() + "&hot=1&page_index=1";
+        hotCommentUrl = hotCommentUrl + "&_=" + dateString;
+
+        fragments.add(CommentsFragment.newInstance(allCommentUrl, hotCommentUrl));
 
         pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(pagerAdapter);

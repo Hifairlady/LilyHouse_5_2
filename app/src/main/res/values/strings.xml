@@ -54,5 +54,6 @@
     <string name="all_comments_string">全部评论</string>
     <string name="check_all_comments_string">查看全部评论</string>
     <string name="author_other_mangas">作者其他作品</string>
+    <string name="searching_string">搜索中...</string>
 
 </resources>

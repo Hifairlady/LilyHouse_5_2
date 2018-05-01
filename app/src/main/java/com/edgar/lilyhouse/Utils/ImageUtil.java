@@ -92,7 +92,8 @@ public class ImageUtil {
             }
         };
 
-        picasso.load(urlString).transform(circularTransform).placeholder(R.drawable.ic_authors_circle)
+        picasso.load(urlString).transform(circularTransform).config(Bitmap.Config.ARGB_4444)
+                .placeholder(R.drawable.ic_authors_circle)
                 .error(R.drawable.ic_authors_circle).into(imageView);
     }
 }
