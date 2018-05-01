@@ -90,6 +90,10 @@ public class MainActivity extends AppCompatActivity {
         listAdapter = new MangaListAdapter(this, mangaItems, true);
         setupRecyclerView();
 
+        queryUrl = MainDataController.getInstance().getSortUrl(curStatusCode, curRegionCode, curOrderCode, curPageNum);
+        MainDataController.getInstance().loadMoreData(queryUrl, loadMoreHandler);
+
+
     }
 
     @Override
@@ -288,15 +292,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void loadMore(int itemsCount, int maxLastVisiblePosition) {
                 curPageNum++;
+                Snackbar.make(recyclerView, "Load more", Snackbar.LENGTH_SHORT);
                 queryUrl = MainDataController.getInstance().getSortUrl(curStatusCode, curRegionCode,
                         curOrderCode, curPageNum);
                 MainDataController.getInstance().loadMoreData(queryUrl, loadMoreHandler);
             }
         });
-
-        queryUrl = MainDataController.getInstance().getSortUrl(curStatusCode, curRegionCode, curOrderCode, curPageNum);
-        MainDataController.getInstance().loadMoreData(queryUrl, loadMoreHandler);
-
     }
 
     @SuppressLint("HandlerLeak")
