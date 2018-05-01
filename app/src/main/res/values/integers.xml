@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="get_data_success">101</integer>
+    <integer name="get_data_failed">102</integer>
+    <integer name="exit_program">103</integer>
+</resources>
