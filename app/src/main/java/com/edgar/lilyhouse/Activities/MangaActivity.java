@@ -26,7 +26,7 @@ import com.edgar.lilyhouse.Fragments.CommentsFragment;
 import com.edgar.lilyhouse.Fragments.RelatedFragment;
 import com.edgar.lilyhouse.Items.CommentQueryArg;
 import com.edgar.lilyhouse.R;
-import com.edgar.lilyhouse.Utils.ImageUtil;
+import com.edgar.lilyhouse.Utils.GlideUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,14 +50,14 @@ public class MangaActivity extends AppCompatActivity {
     private TextView tvLabelTime;
     private ImageView ivCover;
 
-    private ImageUtil imageUtil;
+//    private ImageUtil imageUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_detail);
 
-        imageUtil = new ImageUtil(this);
+//        imageUtil = new ImageUtil(this);
 
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
@@ -139,8 +139,8 @@ public class MangaActivity extends AppCompatActivity {
                     tvLabelTime.setText(MangaController.getInstance().getTimeString());
                     tvLabelStatus.setText(MangaController.getInstance().getStatusString());
                     tvLabelTypes.setText(MangaController.getInstance().getTypeString());
-                    imageUtil.setImageView(ivCover, MangaController.getInstance().getCoverUrl());
-//                    ImageUtil.setImageView(MangaActivity.this, ivCover, MangaController.getInstance().getCoverUrl());
+//                    imageUtil.setImageView(ivCover, MangaController.getInstance().getCoverUrl());
+                    GlideUtil.setImageView(MangaActivity.this, ivCover, MangaController.getInstance().getCoverUrl());
                     authorContainer.removeAllViews();
                     for (int i = 0; i < MangaController.getInstance().getAuthorItems().size(); i++) {
                         addAuthorsView(authorContainer, MangaController.getInstance().getAuthorItems().get(i).getAuthorName(),

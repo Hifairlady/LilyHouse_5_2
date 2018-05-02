@@ -73,6 +73,7 @@ public class AuthorActivity extends AppCompatActivity {
                 case R.integer.get_data_success:
                     adapter = new MangaAdapter(AuthorActivity.this,
                             AuthorController.getInstance().getMangaItems(), true);
+                    adapter.setHasStableIds(true);
                     adapter.setOnItemClickListener(itemClickListener);
                     recyclerView.setAdapter(adapter);
                     break;

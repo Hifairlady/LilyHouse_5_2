@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:clipToPadding="false"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".Fragments.CommentsFragment">
@@ -32,7 +32,7 @@
         <Button
             android:id="@+id/btn_load_all_hot_comments"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="96dp"
             android:text="@string/check_hot_comments_string"
             android:textSize="16sp"
             style="?android:attr/borderlessButtonStyle"
@@ -58,7 +58,7 @@
         <Button
             android:id="@+id/btn_load_all_comments"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="96dp"
             android:text="@string/check_all_comments_string"
             android:layout_marginBottom="56dp"
             android:textSize="16sp"

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
@@ -20,7 +21,7 @@ import android.widget.TextView;
 import com.edgar.lilyhouse.Controllers.SearchController;
 import com.edgar.lilyhouse.Items.SearchResultItem;
 import com.edgar.lilyhouse.R;
-import com.edgar.lilyhouse.Utils.ImageUtil;
+import com.edgar.lilyhouse.Utils.GlideUtil;
 
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -37,9 +38,10 @@ public class SearchActivity extends AppCompatActivity {
     private SearchView searchView;
     private TextView tvSearchCount;
     private LinearLayout lvResultContainer;
-    private ImageUtil imageUtil;
+//    private ImageUtil imageUtil;
     private ImageView ivBackground;
     private boolean isSearching = false;
+    NestedScrollView nestedScrollView;
 
     private String searchUrl;
 
@@ -48,7 +50,7 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        imageUtil = new ImageUtil(this);
+//        imageUtil = new ImageUtil(this);
 
         tvQuote = findViewById(R.id.tv_search_quote);
         tvSearchCount = findViewById(R.id.tv_search_count);
@@ -56,6 +58,7 @@ public class SearchActivity extends AppCompatActivity {
         lvResultContainer = findViewById(R.id.lv_search_result_container);
         ivBackground = findViewById(R.id.iv_search_bg);
         searchView = findViewById(R.id.my_search_view);
+        nestedScrollView = findViewById(R.id.search_scroll_view);
 
         setupQuoteText();
         customSearchView();
@@ -89,7 +92,7 @@ public class SearchActivity extends AppCompatActivity {
         if (searchTextView == null) {
             return;
         }
-        searchTextView.setTextSize(12.f);
+        searchTextView.setTextSize(16.f);
         searchTextView.setTextColor(getResources().getColor(R.color.primary_text));
         searchTextView.setHintTextColor(getResources().getColor(R.color.secondary_text));
         searchTextView.setHint(R.string.search_hint_string);
@@ -185,6 +188,7 @@ public class SearchActivity extends AppCompatActivity {
                     tvSearchCount.setText(countString);
                     tvSearchCount.setVisibility(View.VISIBLE);
                     lvResultContainer.removeAllViews();
+                    nestedScrollView.scrollTo(0, 0);
                     for (int i = 0; i < SearchController.getInstance()
                             .getSearchResultItems().size(); i++) {
                         addViewToContainer(lvResultContainer,
@@ -222,8 +226,8 @@ public class SearchActivity extends AppCompatActivity {
         if (!urlString.startsWith("https")) {
             urlString = "https://images.dmzj.com/" + urlString;
         }
-        imageUtil.setImageView(ivCover, urlString);
-//        ImageUtil.setImageView(SearchActivity.this, ivCover, urlString);
+//        imageUtil.setImageView(ivCover, urlString);
+        GlideUtil.setImageView(SearchActivity.this, ivCover, urlString);
 
         tvTitle.setText(resultItem.getName());
         tvAuthors.setText(resultItem.getAuthors());

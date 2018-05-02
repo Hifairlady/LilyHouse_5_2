@@ -21,7 +21,7 @@ import com.edgar.lilyhouse.Activities.CommentsActivity;
 import com.edgar.lilyhouse.Controllers.CommentController;
 import com.edgar.lilyhouse.Items.CommentItem;
 import com.edgar.lilyhouse.R;
-import com.edgar.lilyhouse.Utils.ImageUtil;
+import com.edgar.lilyhouse.Utils.GlideUtil;
 import com.edgar.lilyhouse.Utils.MyHtmlImageGetter;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -50,7 +50,7 @@ public class CommentsFragment extends Fragment {
     private ArrayList<CommentItem> allComments = new ArrayList<>();
     private LinearLayout lvHotCommentsContainer, lvAllCommentsContainer;
 
-    private ImageUtil imageUtil;
+//    private ImageUtil imageUtil;
 
     public CommentsFragment() { }
 
@@ -85,7 +85,7 @@ public class CommentsFragment extends Fragment {
 
         lvHotCommentsContainer = view.findViewById(R.id.lv_hot_comment_container);
         lvAllCommentsContainer = view.findViewById(R.id.lv_all_comment_container);
-        imageUtil = new ImageUtil(getContext());
+//        imageUtil = new ImageUtil(getContext());
 
         btnLoadAllComments = view.findViewById(R.id.btn_load_all_comments);
         btnLoadHotComments = view.findViewById(R.id.btn_load_all_hot_comments);
@@ -195,8 +195,8 @@ public class CommentsFragment extends Fragment {
             tvLikeCount.setText(String.valueOf(commentItems.get(i).getLike_amount()));
             tvCommentCount.setText(String.valueOf(commentItems.get(i).getReply_amount()));
             tvUsername.setText(commentItems.get(i).getNickname());
-            imageUtil.setCircularImage(ivAvatar, commentItems.get(i).getAvatar_url());
-//            ImageUtil.setCircularImage(getContext(), ivAvatar, commentItems.get(i).getAvatar_url());
+//            imageUtil.setCircularImage(ivAvatar, commentItems.get(i).getAvatar_url());
+            GlideUtil.setCircularImage(getContext(), ivAvatar, commentItems.get(i).getAvatar_url());
 
             int genderResId = (commentItems.get(i).getSex() == 2) ? R.drawable.ic_female : R.drawable.ic_male;
             ivGender.setImageResource(genderResId);
@@ -228,7 +228,6 @@ public class CommentsFragment extends Fragment {
     private void loadInnerComments(LinearLayout lvInnerContainer, ArrayList<CommentItem.MasterCommentItem> masterCommentItems) {
 
         for (int j = 0; j < masterCommentItems.size(); j++) {
-            System.out.println("HEHEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
 
             if (isFragDestroyed) return;
 

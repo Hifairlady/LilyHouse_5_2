@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.edgar.lilyhouse.Items.CommentItem;
 import com.edgar.lilyhouse.R;
-import com.edgar.lilyhouse.Utils.ImageUtil;
+import com.edgar.lilyhouse.Utils.GlideUtil;
 import com.edgar.lilyhouse.Utils.MyHtmlImageGetter;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerviewViewHolder;
 import com.marshalchen.ultimaterecyclerview.UltimateViewAdapter;
@@ -27,12 +27,12 @@ public class CommentAdapter extends UltimateViewAdapter<CommentAdapter.CommentVi
 
     private Context context;
     private ArrayList<CommentItem> commentItems;
-    private ImageUtil imageUtil;
+//    private ImageUtil imageUtil;
 
     public CommentAdapter(Context context, ArrayList<CommentItem> commentItems) {
         this.context = context;
         this.commentItems = commentItems;
-        this.imageUtil = new ImageUtil(context);
+//        this.imageUtil = new ImageUtil(context);
     }
 
     @Override
@@ -74,8 +74,8 @@ public class CommentAdapter extends UltimateViewAdapter<CommentAdapter.CommentVi
         }
 
         String avatarUrl = commentItem.getAvatar_url();
-        imageUtil.setCircularImage(holder.ivAvatar, avatarUrl);
-//        ImageUtil.setCircularImage(context, holder.ivAvatar, avatarUrl);
+//        imageUtil.setCircularImage(holder.ivAvatar, avatarUrl);
+        GlideUtil.setCircularImage(context, holder.ivAvatar, avatarUrl);
         int genderResId = (commentItem.getSex() == 1) ? R.drawable.ic_male : R.drawable.ic_female;
         holder.ivGender.setImageResource(genderResId);
         holder.tvNickname.setText(commentItem.getNickname());

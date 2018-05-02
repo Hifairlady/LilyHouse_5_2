@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.edgar.lilyhouse.Items.MangaItem;
 import com.edgar.lilyhouse.R;
-import com.edgar.lilyhouse.Utils.ImageUtil;
+import com.edgar.lilyhouse.Utils.GlideUtil;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerviewViewHolder;
 import com.marshalchen.ultimaterecyclerview.UltimateViewAdapter;
 
@@ -23,14 +23,14 @@ public class MangaAdapter extends UltimateViewAdapter<MangaAdapter.MangaViewHold
     private ArrayList<MangaItem> mangaItems;
     private Context context;
     private ItemClickListener itemClickListener;
-    private ImageUtil imageUtil;
+//    private ImageUtil imageUtil;
     private boolean isGridOn = false;
 
     public MangaAdapter(Context context, ArrayList<MangaItem> mangaItems, boolean isGridOn) {
         this.mangaItems = mangaItems;
         this.context = context;
         this.isGridOn = isGridOn;
-        this.imageUtil = new ImageUtil(context);
+//        this.imageUtil = new ImageUtil(context);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class MangaAdapter extends UltimateViewAdapter<MangaAdapter.MangaViewHold
 
     @Override
     public long generateHeaderId(int position) {
-        return mangaItems.get(position).getId();
+        return 0;
     }
 
     @Override
@@ -96,8 +96,8 @@ public class MangaAdapter extends UltimateViewAdapter<MangaAdapter.MangaViewHold
         if (!urlString.startsWith("https")) {
             urlString = "https://images.dmzj.com/" + urlString;
         }
-        imageUtil.setImageView(holder.ivCover, urlString);
-//        ImageUtil.setImageView(context, holder.ivCover, urlString);
+//        imageUtil.setImageView(holder.ivCover, urlString);
+        GlideUtil.setImageView(context, holder.ivCover, urlString);
 
 
     }
@@ -132,6 +132,11 @@ public class MangaAdapter extends UltimateViewAdapter<MangaAdapter.MangaViewHold
             }
 
         }
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return mangaItems.get(position).getId();
     }
 
     public void setOnItemClickListener(ItemClickListener listener) {

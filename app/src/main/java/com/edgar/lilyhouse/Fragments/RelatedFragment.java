@@ -103,6 +103,8 @@ public class RelatedFragment extends Fragment {
                     MangaAdapter adapter1 = new MangaAdapter(getContext(), MangaController.getInstance().getMangaItems1(), true);
                     MangaAdapter adapter2 = new MangaAdapter(getContext(), MangaController.getInstance().getMangaItems2(), true);
 
+                    adapter1.setHasStableIds(true);
+                    adapter2.setHasStableIds(true);
                     GridLayoutManager layoutManager1 = new GridLayoutManager(getContext(), 3);
                     recyclerView1.setLayoutManager(layoutManager1);
                     recyclerView1.setAdapter(adapter1);

@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        
         Toolbar toolbar = (Toolbar)findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
         toolbar.setLogo(R.drawable.ic_app_logo);
@@ -295,7 +295,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
 
+//        RecyclerView.ItemAnimator animator = recyclerView.getItemAnimator();
+//        if (animator instanceof SimpleItemAnimator) {
+//            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
+//        }
+
         listAdapter.setOnItemClickListener(itemClickListener);
+        listAdapter.setHasStableIds(true);
         recyclerView.setAdapter(listAdapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

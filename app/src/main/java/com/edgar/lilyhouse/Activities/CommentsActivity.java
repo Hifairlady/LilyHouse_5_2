@@ -22,8 +22,6 @@ import java.util.ArrayList;
 
 public class CommentsActivity extends AppCompatActivity {
 
-    private static final String TAG = "WWWWWWWWWWWWWWWWWWWWWWWWWWWWW" + CommentsActivity.class.getSimpleName();
-
     private boolean isActivityDestroyed = false;
 
     private String queryUrl;
