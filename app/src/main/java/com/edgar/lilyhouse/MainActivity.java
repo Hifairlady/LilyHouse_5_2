@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+
         Toolbar toolbar = (Toolbar)findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
         toolbar.setLogo(R.drawable.ic_app_logo);
@@ -178,7 +178,6 @@ public class MainActivity extends AppCompatActivity {
                     recyclerView.getLayoutManager().scrollToPosition(0);
                     scrollDistance = 0;
                     fabTop.hide();
-//                    Snackbar.make(recyclerView, "fab", Snackbar.LENGTH_SHORT).show();
                     break;
 
                 case R.id.btn_filter_by_status:
@@ -234,7 +233,6 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.btn_filter_apply:
                     applyFilters();
                     filterDialog.dismiss();
-//                    progressDialog.show();
                     break;
 
                 default:
@@ -295,11 +293,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
 
-//        RecyclerView.ItemAnimator animator = recyclerView.getItemAnimator();
-//        if (animator instanceof SimpleItemAnimator) {
-//            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
-//        }
-
         listAdapter.setOnItemClickListener(itemClickListener);
         listAdapter.setHasStableIds(true);
         recyclerView.setAdapter(listAdapter);
@@ -310,10 +303,9 @@ public class MainActivity extends AppCompatActivity {
 
                 scrollDistance = scrollDistance + dy;
 
-                int threshold = (isGridOn == true) ? 5000 : 10000;
-                if (scrollDistance > threshold) {
+                if (scrollDistance > 10000 && !fabTop.isShown()) {
                     fabTop.show();
-                } else {
+                } else if (scrollDistance <= 10000 && fabTop.isShown()) {
                     fabTop.hide();
                 }
 
@@ -366,9 +358,9 @@ public class MainActivity extends AppCompatActivity {
                         mangaItems = new ArrayList<>(items);
                         listAdapter = new MangaAdapter(MainActivity.this, mangaItems, isGridOn);
                         listAdapter.setOnItemClickListener(itemClickListener);
+                        listAdapter.setHasStableIds(true);
                         recyclerView.setAdapter(listAdapter);
                     } else {
-//                        recyclerView.setRefreshing(false);
                         Snackbar.make(recyclerView, "没有数据", Snackbar.LENGTH_SHORT).show();
                     }
                     break;
@@ -442,7 +434,7 @@ public class MainActivity extends AppCompatActivity {
         if (!isExit) {
             isExit = true;
             Snackbar.make(recyclerView, "再点击一次返回键退出", Snackbar.LENGTH_SHORT).show();
-            // 利用handler延迟发送更改状态信息
+            // exit after 2 seconds
             exitHandler.sendEmptyMessageDelayed(R.integer.exit_program, 2000);
         } else {
             finish();

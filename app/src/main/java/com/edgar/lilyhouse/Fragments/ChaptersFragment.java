@@ -18,9 +18,9 @@ import android.widget.TextView;
 
 import com.edgar.lilyhouse.Adapters.GridExAdapter;
 import com.edgar.lilyhouse.Controllers.MangaController;
-import com.edgar.lilyhouse.GridViewEx;
 import com.edgar.lilyhouse.Items.ChapterItem;
 import com.edgar.lilyhouse.R;
+import com.edgar.lilyhouse.Views.GridViewEx;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,9 +28,6 @@ import java.util.Collections;
 
 public class ChaptersFragment extends Fragment {
 
-    private static final String TAG = ChaptersFragment.class.getSimpleName() + "=================";
-
-    private static final String ARG_TITLE = "titleString";
     private static final String ARG_QUERY_URL = "queryUrl";
 
     private boolean isFragDestroyed = false;

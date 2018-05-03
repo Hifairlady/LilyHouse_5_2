@@ -7,13 +7,15 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.WindowManager;
 
 import com.edgar.lilyhouse.Adapters.ReaderAdapter;
 import com.edgar.lilyhouse.Controllers.ReaderController;
 import com.edgar.lilyhouse.Items.ReaderImageItem;
 import com.edgar.lilyhouse.R;
-import com.edgar.lilyhouse.ZoomListView;
+import com.edgar.lilyhouse.Utils.FullScreenUtil;
+import com.edgar.lilyhouse.Views.ZoomRecyclerView;
 import com.google.gson.Gson;
 
 public class ReaderActivity extends AppCompatActivity {
@@ -21,12 +23,12 @@ public class ReaderActivity extends AppCompatActivity {
     private String queryUrl;
     private String jsonString;
 
-    private ReaderAdapter adapter;
-    private ZoomListView listView;
-//    private ScrollZoomListView listView;
+    private ZoomRecyclerView recyclerView;
+    private ReaderAdapter readerAdapter;
 
     private ReaderImageItem readerImageItem;
-    private int width;
+    private int width, height;
+    private FullScreenUtil fullScreenUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +37,16 @@ public class ReaderActivity extends AppCompatActivity {
 
         WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
         width = wm.getDefaultDisplay().getWidth();
+        height = wm.getDefaultDisplay().getHeight();
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         queryUrl = getIntent().getStringExtra(getString(R.string.info_url_string_extra));
-
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         readFromNetwork(queryUrl, true);
 
+        fullScreenUtil = new FullScreenUtil(ReaderActivity.this, getWindow(), recyclerView);
     }
 
     @SuppressLint("HandlerLeak")
@@ -49,10 +54,12 @@ public class ReaderActivity extends AppCompatActivity {
 
         if (isVertical) {
 
-            listView = (ZoomListView) findViewById(R.id.zlv_reader_layout);
-//            listView = (ScrollZoomListView) findViewById(R.id.zlv_reader_layout);
+            recyclerView = (ZoomRecyclerView) findViewById(R.id.zlv_reader_layout);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+            layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            recyclerView.setLayoutManager(layoutManager);
 
-            Handler getImageUrlsHandler = new Handler() {
+            final Handler getImageUrlsHandler = new Handler() {
                 @Override
                 public void handleMessage(Message msg) {
                     super.handleMessage(msg);
@@ -65,13 +72,14 @@ public class ReaderActivity extends AppCompatActivity {
 
                             Gson gson = new Gson();
                             readerImageItem = gson.fromJson(jsonString, ReaderImageItem.class);
-                            adapter = new ReaderAdapter(ReaderActivity.this,
+                            readerAdapter = new ReaderAdapter(ReaderActivity.this,
                                     readerImageItem.getPage_url(), width);
-                            listView.setAdapter(adapter);
+                            readerAdapter.setHasStableIds(true);
+                            recyclerView.setAdapter(readerAdapter);
                             break;
 
                         case R.integer.get_data_failed:
-                            Snackbar.make(listView, "Network Error!", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(recyclerView, "Network Error!", Snackbar.LENGTH_SHORT).show();
                             break;
 
                         default:
@@ -81,13 +89,17 @@ public class ReaderActivity extends AppCompatActivity {
             };
 
             ReaderController.getInstance().setupImageUrl(queryUrl, getImageUrlsHandler);
-
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        adapter.stopPicasso();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                GlideApp.get(ReaderActivity.this).clearDiskCache();
+//            }
+//        }).start();
     }
 }

@@ -53,6 +53,7 @@ public class HtmlParser extends Thread {
             message.what = R.integer.get_data_failed;
             message.obj = "Failed: Illegal Url";
             jsoupHandler.sendMessage(message);
+
         }
     }
 

@@ -13,21 +13,21 @@ public class GlideUtil {
 
     public static void setScaledImage(Context context, String urlString, ImageView imageView, final int width) {
         GlideApp.with(context).load(getGlideUrl(urlString)).transform(new ScaledTransformation(width))
-                .placeholder(R.drawable.lily_loading_black).error(R.drawable.error_white_bg)
+                .placeholder(R.drawable.lily_loading_black1).error(R.drawable.error_black_bg)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
     }
 
     public static void setImageView(Context context, ImageView imageView, String urlString) {
         GlideApp.with(context).load(getGlideUrl(urlString)).centerCrop()
-                .placeholder(R.drawable.ic_pure_white_bg).error(R.drawable.error_white_bg)
+                .placeholder(R.drawable.loading_white_bg).error(R.drawable.error_white_bg)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
     }
 
     public static void setCircularImage(Context context, ImageView imageView, String urlString) {
         GlideApp.with(context).load(getGlideUrl(urlString)).circleCrop()
-                .placeholder(R.drawable.ic_pure_white_bg).error(R.drawable.error_white_bg)
+                .placeholder(R.drawable.ic_authors_circle).error(R.drawable.ic_authors_circle)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
     }
@@ -51,9 +51,9 @@ public class GlideUtil {
                                     int preloadNum, int width) {
         int loaded;
         for (loaded = 0; loaded < preloadNum; loaded++) {
-            if (urls[position+loaded] == null || urls[position+loaded].length() == 0) break;
+            if (position+loaded >= urls.length) break;
             GlideApp.with(context).load(getGlideUrl(urls[position+loaded]))
-                    .placeholder(R.drawable.lily_loading_black).error(R.drawable.error_white_bg)
+                    .placeholder(R.drawable.lily_loading_black1).error(R.drawable.error_black_bg)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .preload();
         }

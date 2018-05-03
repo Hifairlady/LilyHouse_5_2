@@ -23,14 +23,12 @@ public class MangaAdapter extends UltimateViewAdapter<MangaAdapter.MangaViewHold
     private ArrayList<MangaItem> mangaItems;
     private Context context;
     private ItemClickListener itemClickListener;
-//    private ImageUtil imageUtil;
     private boolean isGridOn = false;
 
     public MangaAdapter(Context context, ArrayList<MangaItem> mangaItems, boolean isGridOn) {
         this.mangaItems = mangaItems;
         this.context = context;
         this.isGridOn = isGridOn;
-//        this.imageUtil = new ImageUtil(context);
     }
 
     @Override

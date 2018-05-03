@@ -37,8 +37,6 @@ public class MangaActivity extends AppCompatActivity {
 
     private String urlString;
 
-//    private String obj_id, authoruid, is_Original, comment_type, isToggle, dt;
-
     private ViewPager viewPager;
     private ViewPagerAdapter pagerAdapter;
     private LinearLayout authorContainer;
@@ -50,14 +48,10 @@ public class MangaActivity extends AppCompatActivity {
     private TextView tvLabelTime;
     private ImageView ivCover;
 
-//    private ImageUtil imageUtil;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_detail);
-
-//        imageUtil = new ImageUtil(this);
 
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);

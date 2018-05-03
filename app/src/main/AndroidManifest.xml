@@ -19,15 +19,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.SearchActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Activities.SearchActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.MangaActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity android:name=".Activities.AuthorActivity" />
         <activity android:name=".Activities.CommentsActivity" />
         <activity android:name=".Activities.ReaderActivity" />
+        <activity android:name=".Activities.CommentImageActivity"></activity>
     </application>
 
 </manifest>

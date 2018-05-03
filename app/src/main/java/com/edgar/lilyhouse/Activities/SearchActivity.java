@@ -38,7 +38,6 @@ public class SearchActivity extends AppCompatActivity {
     private SearchView searchView;
     private TextView tvSearchCount;
     private LinearLayout lvResultContainer;
-//    private ImageUtil imageUtil;
     private ImageView ivBackground;
     private boolean isSearching = false;
     NestedScrollView nestedScrollView;
@@ -49,8 +48,6 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
-//        imageUtil = new ImageUtil(this);
 
         tvQuote = findViewById(R.id.tv_search_quote);
         tvSearchCount = findViewById(R.id.tv_search_count);
@@ -104,15 +101,6 @@ public class SearchActivity extends AppCompatActivity {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return formatter.format(date);
     }
-
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        SharedPreferences quoteLocalStorage = getSharedPreferences("quoteText", MODE_PRIVATE);
-//        SharedPreferences.Editor editor = quoteLocalStorage.edit();
-//        editor.clear();
-//        editor.apply();
-//    }
 
     private String getQuoteText(String quoteKeyString) {
         SharedPreferences quoteLocalStorage = getSharedPreferences("quoteText", MODE_PRIVATE);
@@ -226,7 +214,6 @@ public class SearchActivity extends AppCompatActivity {
         if (!urlString.startsWith("https")) {
             urlString = "https://images.dmzj.com/" + urlString;
         }
-//        imageUtil.setImageView(ivCover, urlString);
         GlideUtil.setImageView(SearchActivity.this, ivCover, urlString);
 
         tvTitle.setText(resultItem.getName());

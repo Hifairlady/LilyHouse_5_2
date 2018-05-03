@@ -50,8 +50,6 @@ public class CommentsFragment extends Fragment {
     private ArrayList<CommentItem> allComments = new ArrayList<>();
     private LinearLayout lvHotCommentsContainer, lvAllCommentsContainer;
 
-//    private ImageUtil imageUtil;
-
     public CommentsFragment() { }
 
     public static CommentsFragment newInstance(String allUrl, String hotUrl) {
@@ -85,7 +83,6 @@ public class CommentsFragment extends Fragment {
 
         lvHotCommentsContainer = view.findViewById(R.id.lv_hot_comment_container);
         lvAllCommentsContainer = view.findViewById(R.id.lv_all_comment_container);
-//        imageUtil = new ImageUtil(getContext());
 
         btnLoadAllComments = view.findViewById(R.id.btn_load_all_comments);
         btnLoadHotComments = view.findViewById(R.id.btn_load_all_hot_comments);
@@ -195,21 +192,21 @@ public class CommentsFragment extends Fragment {
             tvLikeCount.setText(String.valueOf(commentItems.get(i).getLike_amount()));
             tvCommentCount.setText(String.valueOf(commentItems.get(i).getReply_amount()));
             tvUsername.setText(commentItems.get(i).getNickname());
-//            imageUtil.setCircularImage(ivAvatar, commentItems.get(i).getAvatar_url());
             GlideUtil.setCircularImage(getContext(), ivAvatar, commentItems.get(i).getAvatar_url());
 
             int genderResId = (commentItems.get(i).getSex() == 2) ? R.drawable.ic_female : R.drawable.ic_male;
             ivGender.setImageResource(genderResId);
 
             String htmlContent = "<span>" + commentItems.get(i).getContent() + "</span>";
-            String imageUrl = commentItems.get(i).getUpload_images();
-            if (imageUrl.length() != 0) {
-                if (!imageUrl.startsWith("http")) {
-                    imageUrl = "https://images.dmzj.com/commentImg/" + commentItems.get(i).getObj_id() % 500
-                            + "/" + imageUrl;
+            String[] outImageUrls = commentItems.get(i).getUpload_images().split(",");
+
+            for (int outIndex = 0; outIndex < outImageUrls.length; outIndex++) {
+                if (outImageUrls[outIndex].length() == 0) continue;
+                if (!outImageUrls[outIndex].startsWith("http")) {
+                    outImageUrls[outIndex] = "https://images.dmzj.com/commentImg/" +
+                            commentItems.get(i).getObj_id() % 500 + "/" + outImageUrls[outIndex];
                 }
-                htmlContent = htmlContent + "<br /><img src=\"" + imageUrl + "\">";
-//                Log.d(TAG, "loadComments: image url: " + imageUrl);
+                htmlContent = htmlContent + "<img src=\"" + outImageUrls[outIndex] + "\">";
             }
             tvCommentContent.setHtml(htmlContent, new MyHtmlImageGetter(tvCommentContent));
 
@@ -217,42 +214,13 @@ public class CommentsFragment extends Fragment {
                 LinearLayout lvInnerContainer = outSideView.findViewById(R.id.lv_inner_comment_container);
                 lvHotContainer.setVisibility(View.VISIBLE);
                 ArrayList<CommentItem.MasterCommentItem> masterCommentItems = commentItems.get(i).getMasterComment();
-                loadInnerComments(lvInnerContainer, masterCommentItems);
+//                loadInnerComments(lvInnerContainer, masterCommentItems);
+                CommentController.getInstance().loadInnerComments(getContext(), lvInnerContainer, masterCommentItems);
             }
 
+            CommentController.getInstance().setupImageSpan(getContext(), tvCommentContent, outImageUrls);
             lvHotContainer.addView(outSideView);
 
-        }
-    }
-
-    private void loadInnerComments(LinearLayout lvInnerContainer, ArrayList<CommentItem.MasterCommentItem> masterCommentItems) {
-
-        for (int j = 0; j < masterCommentItems.size(); j++) {
-
-            if (isFragDestroyed) return;
-
-            View innerView = LayoutInflater.from(getContext()).inflate(R.layout.item_inner_comment, null);
-            HtmlTextView tvInnerContent = innerView.findViewById(R.id.tv_inner_comment_content);
-            TextView tvFloorNumber = innerView.findViewById(R.id.tv_comment_floor_number);
-
-            tvFloorNumber.setText("#" + String.valueOf(j + 1));
-            String nameHtml = "<b>" + masterCommentItems.get(j).getNickname() + "</b>";
-//            String nameHtml = "<b><font color=\"blue\">" + masterCommentItems.get(j).getNickname()
-//                    + "</font></b>";
-            String textContent = nameHtml + ": " + masterCommentItems.get(j).getContent();
-            String htmlContent = "<span>" + textContent + "</span>";
-
-            String imageUrl = masterCommentItems.get(j).getUpload_images();
-            if (imageUrl.length() != 0) {
-                if (!imageUrl.startsWith("http")) {
-                    imageUrl = "https://images.dmzj.com/commentImg/" +
-                            masterCommentItems.get(j).getObj_id() % 500 + "/" + imageUrl;
-                }
-                htmlContent = htmlContent + "<br /><img src=\"" + imageUrl + "\">";
-//                Log.d(TAG, "loadInnerComments: image url: " + htmlContent);
-            }
-            tvInnerContent.setHtml(htmlContent, new MyHtmlImageGetter(tvInnerContent));
-            lvInnerContainer.addView(innerView);
         }
     }
 

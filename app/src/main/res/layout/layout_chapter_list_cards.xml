@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.edgar.lilyhouse.GridViewEx
+            <com.edgar.lilyhouse.Views.GridViewEx
                 android:id="@+id/chapter_gridview"
                 android:layout_gravity="center"
                 android:layout_width="match_parent"

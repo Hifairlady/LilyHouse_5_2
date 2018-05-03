@@ -1,4 +1,4 @@
-package com.edgar.lilyhouse;
+package com.edgar.lilyhouse.Views;
 
 import android.content.Context;
 import android.util.AttributeSet;

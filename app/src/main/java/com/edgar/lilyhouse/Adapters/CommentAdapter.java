@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.edgar.lilyhouse.Controllers.CommentController;
 import com.edgar.lilyhouse.Items.CommentItem;
 import com.edgar.lilyhouse.R;
 import com.edgar.lilyhouse.Utils.GlideUtil;
@@ -25,14 +26,14 @@ import java.util.Date;
 
 public class CommentAdapter extends UltimateViewAdapter<CommentAdapter.CommentViewHolder> {
 
+    private static final String TAG = "=====================" + CommentAdapter.class.getSimpleName();
+
     private Context context;
     private ArrayList<CommentItem> commentItems;
-//    private ImageUtil imageUtil;
 
     public CommentAdapter(Context context, ArrayList<CommentItem> commentItems) {
         this.context = context;
         this.commentItems = commentItems;
-//        this.imageUtil = new ImageUtil(context);
     }
 
     @Override
@@ -68,7 +69,9 @@ public class CommentAdapter extends UltimateViewAdapter<CommentAdapter.CommentVi
 
         if (commentItem.getMasterCommentNum() != 0) {
             holder.lvInnerContainer.setVisibility(View.VISIBLE);
-            loadInnerComments(holder.lvInnerContainer, commentItem.getMasterComment());
+            CommentController.getInstance().loadInnerComments(context, holder.lvInnerContainer,
+                    commentItem.getMasterComment());
+//            loadInnerComments(holder.lvInnerContainer, commentItem.getMasterComment());
         } else {
             holder.lvInnerContainer.setVisibility(View.GONE);
         }
@@ -85,16 +88,20 @@ public class CommentAdapter extends UltimateViewAdapter<CommentAdapter.CommentVi
         holder.tvCommentCount.setText(String.valueOf(commentItem.getReply_amount()));
 
         String htmlContentString = "<span>" + commentItem.getContent() + "</span>";
-        String imageUrl = commentItem.getUpload_images();
-        if (imageUrl.length() != 0) {
-            if (!imageUrl.startsWith("http")) {
-                imageUrl = "https://images.dmzj.com/commentImg/" + commentItem.getObj_id() % 500
-                        + "/" + imageUrl;
+        String[] outsideUrls = commentItem.getUpload_images().split(",");
+
+        for (int imageIndex = 0; imageIndex < outsideUrls.length; imageIndex++) {
+            if (outsideUrls[imageIndex].length() != 0) {
+                if (!outsideUrls[imageIndex].startsWith("http")) {
+                    outsideUrls[imageIndex] = "https://images.dmzj.com/commentImg/" +
+                            commentItem.getObj_id() % 500 + "/" + outsideUrls[imageIndex];
+                }
+                htmlContentString = htmlContentString + "<img src=\"" + outsideUrls[imageIndex] + "\" />";
             }
-            htmlContentString = htmlContentString + "<br /><img src=\"" + imageUrl + "\">";
         }
         holder.htvContent.setHtml(htmlContentString, new MyHtmlImageGetter(holder.htvContent));
 
+        CommentController.getInstance().setupImageSpan(context, holder.htvContent, outsideUrls);
     }
 
     @Override
@@ -130,56 +137,11 @@ public class CommentAdapter extends UltimateViewAdapter<CommentAdapter.CommentVi
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     private String getDateString(long lastUpdateTime) {
         long times = lastUpdateTime * 1000;
         Date date = new Date(times);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return formatter.format(date);
-    }
-
-    private void loadInnerComments(LinearLayout lvInnerContainer, ArrayList<CommentItem.MasterCommentItem> masterCommentItems) {
-
-        lvInnerContainer.removeAllViews();
-
-        for (int position = 0; position < masterCommentItems.size(); position++) {
-
-            View view = LayoutInflater.from(context).inflate(R.layout.item_inner_comment, null);
-
-            TextView tvFloor = (TextView)view.findViewById(R.id.tv_comment_floor_number);
-            HtmlTextView htvInnerContent = (HtmlTextView)view.findViewById(R.id.tv_inner_comment_content);
-
-            tvFloor.setText("#" + String.valueOf(position + 1));
-            String nameHtml = "<b>" + masterCommentItems.get(position).getNickname() + "</b>";
-            String textContent = nameHtml + ": " + masterCommentItems.get(position).getContent();
-            String htmlContent = "<span>" + textContent + "</span>";
-
-            String imageUrl = masterCommentItems.get(position).getUpload_images();
-            if (imageUrl.length() != 0) {
-                if (!imageUrl.startsWith("http")) {
-                    imageUrl = "https://images.dmzj.com/commentImg/" +
-                            masterCommentItems.get(position).getObj_id() % 500 + "/" + imageUrl;
-                }
-                htmlContent = htmlContent + "<br /><img src=\"" + imageUrl + "\">";
-            }
-            htvInnerContent.setHtml(htmlContent, new MyHtmlImageGetter(htvInnerContent));
-            lvInnerContainer.addView(view);
-
-
-        }
-
     }
 
 }

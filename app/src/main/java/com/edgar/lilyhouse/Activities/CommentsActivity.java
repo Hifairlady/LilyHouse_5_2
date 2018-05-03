@@ -4,12 +4,14 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.edgar.lilyhouse.Adapters.CommentAdapter;
@@ -22,6 +24,8 @@ import java.util.ArrayList;
 
 public class CommentsActivity extends AppCompatActivity {
 
+    private static final String TAG = "=======================" + CommentsActivity.class.getSimpleName();
+
     private boolean isActivityDestroyed = false;
 
     private String queryUrl;
@@ -32,9 +36,11 @@ public class CommentsActivity extends AppCompatActivity {
 
     private ArrayList<CommentItem> commentItems = new ArrayList<>();
 
-//    private ListView listView;
     private UltimateRecyclerView recyclerView;
     private CommentAdapter adapter;
+    private boolean fromRefresh = false;
+
+    private FloatingActionButton fabTop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,22 +65,30 @@ public class CommentsActivity extends AppCompatActivity {
             }
         });
 
+        fabTop = (FloatingActionButton)findViewById(R.id.fab_comments_top);
+        fabTop.bringToFront();
+        fabTop.setOnClickListener(mOnClickListener);
+        fabTop.hide();
+
         recyclerView = (UltimateRecyclerView)findViewById(R.id.rv_comments_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-//        MyLayoutManager layoutManager = new MyLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         adapter = new CommentAdapter(this, commentItems);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         recyclerView.setDefaultSwipeToRefreshColorScheme(0x000000);
+        recyclerView.setRefreshing(false);
         recyclerView.setDefaultOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                recyclerView.setRefreshing(true);
+                fromRefresh = true;
                 curPage = 1;
                 scrollDistance = 0;
                 isLoadingNextPage = true;
                 String urlString = getUrlString(queryUrl, curPage);
                 CommentController.getInstance().setupCommentsList(urlString, getCommentsHandler);
+                Log.d(TAG, "onRefresh: " + urlString);
                 Snackbar.make(recyclerView, "Loading next page...", Snackbar.LENGTH_SHORT).show();
 
             }
@@ -86,10 +100,10 @@ public class CommentsActivity extends AppCompatActivity {
                 super.onScrolled(recyclerView, dx, dy);
                 scrollDistance = scrollDistance + dy;
 
-                if (scrollDistance > 10000) {
-//                    fabTop.show();
-                } else {
-//                    fabTop.hide();
+                if (scrollDistance > 10000 && !fabTop.isShown()) {
+                    fabTop.show();
+                } else if (scrollDistance <= 10000 && fabTop.isShown()) {
+                    fabTop.hide();
                 }
 
                 if (isSlideToBottom(recyclerView) && !isLoadingNextPage) {
@@ -97,7 +111,7 @@ public class CommentsActivity extends AppCompatActivity {
                     isLoadingNextPage = true;
                     String urlString = getUrlString(queryUrl, curPage);
                     CommentController.getInstance().setupCommentsList(urlString, getCommentsHandler);
-                    Snackbar.make(recyclerView, "Loading next page...", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(recyclerView, R.string.loading_next_page_string, Snackbar.LENGTH_SHORT).show();
 
                 }
             }
@@ -134,14 +148,15 @@ public class CommentsActivity extends AppCompatActivity {
                         Snackbar.make(recyclerView, getString(R.string.no_data_string), Snackbar.LENGTH_SHORT).show();
                         return;
                     }
+                    if (fromRefresh) commentItems.clear();
                     commentItems.addAll(items);
                     adapter.notifyDataSetChanged();
+                    fromRefresh = false;
                     break;
 
                 case R.integer.get_data_failed:
 
                     if (isActivityDestroyed) return;
-
                     Snackbar.make(recyclerView, "Network Error!", Snackbar.LENGTH_SHORT).show();
                     break;
 
@@ -173,5 +188,21 @@ public class CommentsActivity extends AppCompatActivity {
         isActivityDestroyed = true;
     }
 
+    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+
+                case R.id.fab_comments_top:
+                    fabTop.hide();
+                    scrollDistance = 0;
+                    recyclerView.scrollVerticallyToPosition(0);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    };
 
 }

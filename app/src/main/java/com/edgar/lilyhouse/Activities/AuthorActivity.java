@@ -16,7 +16,6 @@ import com.edgar.lilyhouse.Controllers.AuthorController;
 import com.edgar.lilyhouse.R;
 
 public class AuthorActivity extends AppCompatActivity {
-    private static final String TAG = "=================" + AuthorActivity.class.getSimpleName();
 
     private RecyclerView recyclerView;
     private MangaAdapter adapter;

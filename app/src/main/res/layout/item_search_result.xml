@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_status"
+                android:src="@drawable/ic_status_black"
                 app:layout_constraintBottom_toBottomOf="@+id/cover_image"
                 app:layout_constraintEnd_toEndOf="@+id/cover_image" />
 
