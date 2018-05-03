@@ -38,7 +38,6 @@ public class SearchActivity extends AppCompatActivity {
     private SearchView searchView;
     private TextView tvSearchCount;
     private LinearLayout lvResultContainer;
-    private ImageView ivBackground;
     private boolean isSearching = false;
     NestedScrollView nestedScrollView;
 
@@ -53,7 +52,6 @@ public class SearchActivity extends AppCompatActivity {
         tvSearchCount = findViewById(R.id.tv_search_count);
         tvSearchCount.setVisibility(View.GONE);
         lvResultContainer = findViewById(R.id.lv_search_result_container);
-        ivBackground = findViewById(R.id.iv_search_bg);
         searchView = findViewById(R.id.my_search_view);
         nestedScrollView = findViewById(R.id.search_scroll_view);
 
@@ -89,7 +87,8 @@ public class SearchActivity extends AppCompatActivity {
         if (searchTextView == null) {
             return;
         }
-        searchTextView.setTextSize(16.f);
+//        searchTextView.setTextSize(16.f);
+        searchTextView.setTextAppearance(SearchActivity.this, R.style.SearchTextStyle);
         searchTextView.setTextColor(getResources().getColor(R.color.primary_text));
         searchTextView.setHintTextColor(getResources().getColor(R.color.secondary_text));
         searchTextView.setHint(R.string.search_hint_string);
@@ -235,7 +234,9 @@ public class SearchActivity extends AppCompatActivity {
                 Intent infoIntent = new Intent(SearchActivity.this, MangaActivity.class);
                 infoIntent.putExtra(getString(R.string.info_title_string_extra), resultItem.getName());
                 String urlString = "https://m.dmzj.com/info/" + resultItem.getId() + ".html";
+                String backuUrl = "https://m.dmzj.com/info/" + resultItem.getComic_py() + ".html";
                 infoIntent.putExtra(getString(R.string.info_url_string_extra), urlString);
+                infoIntent.putExtra(getString(R.string.back_up_url_string_extra), backuUrl);
                 startActivity(infoIntent);
             }
         });

@@ -4,4 +4,5 @@
     <integer name="get_data_failed">102</integer>
     <integer name="exit_program">103</integer>
     <integer name="fullscreen_message">104</integer>
+    <integer name="request_permission_storage_code">105</integer>
 </resources>

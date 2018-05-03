@@ -27,6 +27,9 @@
     <string name="menu_search_string">搜索</string>
     <string name="info_title_string_extra">titleString</string>
     <string name="info_url_string_extra">urlString</string>
+    <string name="full_title_string_extra">fullTitleString</string>
+    <string name="authors_string_extra">authorsStrings</string>
+    <string name="back_up_url_string_extra">backupUrl</string>
     <string name="loading_no_data_string">没有数据了!</string>
     <string name="search_view_hint_string">作品名、作者名</string>
 
@@ -57,4 +60,9 @@
     <string name="searching_string">搜索中...</string>
     <string name="loading_next_page_string">加载下一页</string>
 
+    <string name="request_permission_failed_string">申请设备存储空间访问权限失败</string>
+    <string name="request_rationale_string">LilyHouse 将申请设备存储空间访问权限以便启用下载功能。您愿意授权吗？</string>
+    <string name="chapters_directory_string">目录</string>
+    <string name="previous_chapter_button_string">上一章</string>
+    <string name="next_chapter_button_string">下一章</string>
 </resources>

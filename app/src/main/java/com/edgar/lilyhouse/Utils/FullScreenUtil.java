@@ -17,6 +17,7 @@ public class FullScreenUtil {
     private Window window;
     private int width, height;
     private boolean isFullScreen = true;
+    private boolean isScrolling = false;
 
     @SuppressLint("ClickableViewAccessibility")
     public FullScreenUtil(Context context, final Window window, RecyclerView recyclerView) {
@@ -27,19 +28,29 @@ public class FullScreenUtil {
             height = wm.getDefaultDisplay().getHeight();
         }
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                isScrolling = (newState != RecyclerView.SCROLL_STATE_IDLE
+                        && newState != RecyclerView.SCROLL_STATE_SETTLING);
+            }
+
+        });
+
         //handle fullscreen and exit fullscreen
         recyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-                if (event.getAction() == MotionEvent.ACTION_MOVE) return false;
-
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
                     int x = (int)event.getX();
                     int y = (int)event.getY();
 
                     if (x >= width/2-200 && x <= width/2+200
                             && y >= height/2-200 && y <= height/2+200) {
+                        if (isScrolling) return false;
+
                         if (isFullScreen) {
                             window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                             fullscreenHandler.sendEmptyMessageDelayed(R.integer.fullscreen_message, 3000);

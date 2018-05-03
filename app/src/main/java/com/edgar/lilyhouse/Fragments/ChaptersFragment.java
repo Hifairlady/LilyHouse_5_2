@@ -29,10 +29,14 @@ import java.util.Collections;
 public class ChaptersFragment extends Fragment {
 
     private static final String ARG_QUERY_URL = "queryUrl";
+    private static final String ARG_QUERY_TITLE = "titleString";
+    private static final String ARG_QUERY_AUTHORS = "authorsStrings";
 
     private boolean isFragDestroyed = false;
 
     private String queryUrl = null;
+    private String titleString;
+    private String[] authorsStrings;
 
     private LinearLayout lvContainer;
     private TextView tvIntro;
@@ -48,10 +52,12 @@ public class ChaptersFragment extends Fragment {
 
     public ChaptersFragment() { }
 
-    public static ChaptersFragment newInstance(String urlString) {
+    public static ChaptersFragment newInstance(String urlString, String titleString, String[] authorsStrings) {
         ChaptersFragment fragment = new ChaptersFragment();
         Bundle args = new Bundle();
         args.putString(ARG_QUERY_URL, urlString);
+        args.putString(ARG_QUERY_TITLE, titleString);
+        args.putStringArray(ARG_QUERY_AUTHORS, authorsStrings);
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,6 +67,8 @@ public class ChaptersFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             queryUrl = getArguments().getString(ARG_QUERY_URL);
+            titleString = getArguments().getString(ARG_QUERY_TITLE);
+            authorsStrings = getArguments().getStringArray(ARG_QUERY_AUTHORS);
         }
     }
 
@@ -170,7 +178,7 @@ public class ChaptersFragment extends Fragment {
         TextView tvTotal = view.findViewById(R.id.tv_total_chapters);
 
         final GridViewEx gridView = view.findViewById(R.id.chapter_gridview);
-        GridExAdapter adapter = new GridExAdapter(getContext(), chapterItem);
+        GridExAdapter adapter = new GridExAdapter(getContext(), chapterItem, titleString, authorsStrings);
         adapters = Arrays.copyOf(adapters, adapters.length + 1);
         adapters[adapters.length - 1] = adapter;
 

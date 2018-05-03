@@ -1,6 +1,7 @@
 package com.edgar.lilyhouse.Utils;
 
 import android.content.Context;
+import android.os.Environment;
 import android.widget.ImageView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -10,6 +11,9 @@ import com.edgar.lilyhouse.GlideApp;
 import com.edgar.lilyhouse.R;
 
 public class GlideUtil {
+
+    private static final String DOWNLOAD_PATH = Environment.getExternalStorageDirectory() +
+            "Android/data/LilyHouse/download/";
 
     public static void setScaledImage(Context context, String urlString, ImageView imageView, final int width) {
         GlideApp.with(context).load(getGlideUrl(urlString)).transform(new ScaledTransformation(width))

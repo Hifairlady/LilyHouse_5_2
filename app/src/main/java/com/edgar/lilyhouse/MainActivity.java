@@ -1,11 +1,14 @@
 package com.edgar.lilyhouse;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -28,6 +31,7 @@ import com.edgar.lilyhouse.Activities.SearchActivity;
 import com.edgar.lilyhouse.Adapters.MangaAdapter;
 import com.edgar.lilyhouse.Controllers.MainController;
 import com.edgar.lilyhouse.Items.MangaItem;
+import com.edgar.lilyhouse.Utils.PermissionRequester;
 import com.marshalchen.ultimaterecyclerview.UltimateRecyclerView;
 
 import java.util.ArrayList;
@@ -36,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
     private int curStatusCode = 0, curRegionCode = 0, curOrderCode = 0, curPageNum = 0;
     private static boolean isExit = false;
+
+    private static final int REQUEST_PERMISSION_STORAGE_CODE = 105;
 
     private String curStatusString = "全部";
     private String curRegionString = "全部";
@@ -106,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
         queryUrl = MainController.getInstance().getSortUrl(curStatusCode, curRegionCode, curOrderCode, curPageNum);
         MainController.getInstance().loadMoreData(queryUrl, loadMoreHandler);
 
+        PermissionRequester.request(this, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                getString(R.string.request_rationale_string), REQUEST_PERMISSION_STORAGE_CODE);
 
     }
 
@@ -164,7 +172,10 @@ public class MainActivity extends AppCompatActivity {
             infoIntent.putExtra(getString(R.string.info_title_string_extra), mangaItems.get(position).getName());
             String urlString = "https://m.dmzj.com/info/" +
                     mangaItems.get(position).getId() + ".html";
+            String backupUrl = "https://m.dmzj.com/info/" +
+                    mangaItems.get(position).getComic_py() + ".html";
             infoIntent.putExtra(getString(R.string.info_url_string_extra), urlString);
+            infoIntent.putExtra(getString(R.string.back_up_url_string_extra), backupUrl);
             startActivity(infoIntent);
         }
     };
@@ -442,5 +453,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_PERMISSION_STORAGE_CODE) {
+            if (grantResults.length == 1 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+//                Toast.makeText(this, R.string.request_permission_failed_string, Toast.LENGTH_SHORT).show();
+                Snackbar.make(recyclerView, R.string.request_permission_failed_string, Snackbar.LENGTH_SHORT).show();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
 }

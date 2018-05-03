@@ -16,13 +16,19 @@ import com.edgar.lilyhouse.R;
 
 public class GridExAdapter extends BaseAdapter {
 
+    private static final String TAG = "===================" + GridExAdapter.class.getSimpleName();
+
     private Context context;
     private ChapterItem chapterItem;
     private SharedPreferences sharedPreferences;
+    private String titleString;
+    private String[] authorsStrings;
 
-    public GridExAdapter(Context context, ChapterItem chapterItem) {
+    public GridExAdapter(Context context, ChapterItem chapterItem, String titleString, String[] authorsStrings) {
         this.context = context;
         this.chapterItem = chapterItem;
+        this.titleString = titleString;
+        this.authorsStrings = authorsStrings;
         this.sharedPreferences = context.getSharedPreferences("WATCH_STATE", Context.MODE_PRIVATE);
     }
 
@@ -66,7 +72,13 @@ public class GridExAdapter extends BaseAdapter {
                 Intent readerIntent = new Intent(context, ReaderActivity.class);
                 readerIntent.putExtra(context.getString(R.string.info_title_string_extra),
                         chapterItem.getData().get(position).getChapter_name());
+
+                String fullTitleString = titleString + "/" + chapterItem.getData().get(position).getTitle() +
+                        "/" + chapterItem.getData().get(position).getChapter_name();
+//                Log.d(TAG, "onClick: " + fullTitleString);
                 readerIntent.putExtra(context.getString(R.string.info_url_string_extra), urlString);
+                readerIntent.putExtra(context.getString(R.string.full_title_string_extra), fullTitleString);
+                readerIntent.putExtra(context.getString(R.string.authors_string_extra), authorsStrings);
                 context.startActivity(readerIntent);
 
 

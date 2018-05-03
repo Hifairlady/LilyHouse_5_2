@@ -35,7 +35,9 @@ public class MangaActivity extends AppCompatActivity {
 
     private static final String TAG = MangaActivity.class.getSimpleName() + "WWWWWWWWWWWWWWWWWW";
 
-    private String urlString;
+    private String urlString, backupUrl, titleString;
+
+    private boolean firstTry = true;
 
     private ViewPager viewPager;
     private ViewPagerAdapter pagerAdapter;
@@ -48,6 +50,8 @@ public class MangaActivity extends AppCompatActivity {
     private TextView tvLabelTime;
     private ImageView ivCover;
 
+    private String[] authorsStrings = new String[0];
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,8 +63,9 @@ public class MangaActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        String titleString = getIntent().getStringExtra(getString(R.string.info_title_string_extra));
+        titleString = getIntent().getStringExtra(getString(R.string.info_title_string_extra));
         urlString = getIntent().getStringExtra(getString(R.string.info_url_string_extra));
+        backupUrl = getIntent().getStringExtra(getString(R.string.back_up_url_string_extra));
 
         toolbar.setTitle(titleString);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -79,6 +84,8 @@ public class MangaActivity extends AppCompatActivity {
 
         viewPager = (ViewPager) findViewById(R.id.info_view_pager);
 
+
+        Log.d(TAG, "onCreate: " + urlString);
         MangaController.getInstance().setupMangaInfos(urlString, getInfosHandler);
     }
 
@@ -86,7 +93,7 @@ public class MangaActivity extends AppCompatActivity {
         fragments.clear();
         Log.d(TAG, "setupFragments: " + MangaController.getInstance().getRelatedUrl());
         fragments.add(RelatedFragment.newInstance(MangaController.getInstance().getRelatedUrl()));
-        fragments.add(ChaptersFragment.newInstance(urlString));
+        fragments.add(ChaptersFragment.newInstance(urlString, titleString, authorsStrings));
 
         Date date = new Date();
         String dateString = String.valueOf(date.getTime());
@@ -136,14 +143,23 @@ public class MangaActivity extends AppCompatActivity {
 //                    imageUtil.setImageView(ivCover, MangaController.getInstance().getCoverUrl());
                     GlideUtil.setImageView(MangaActivity.this, ivCover, MangaController.getInstance().getCoverUrl());
                     authorContainer.removeAllViews();
+                    authorsStrings = new String[MangaController.getInstance().getAuthorItems().size()];
                     for (int i = 0; i < MangaController.getInstance().getAuthorItems().size(); i++) {
                         addAuthorsView(authorContainer, MangaController.getInstance().getAuthorItems().get(i).getAuthorName(),
                                 MangaController.getInstance().getAuthorItems().get(i).getAuthorUrl());
+                        authorsStrings[i] = MangaController.getInstance().getAuthorItems().get(i).getAuthorName();
                     }
                     setupFragments();
                     break;
 
                 case R.integer.get_data_failed:
+                    if (firstTry) {
+                        firstTry = false;
+                        Log.d(TAG, "handleMessage: " + backupUrl);
+                        if (backupUrl == null || backupUrl.length() == 0) break;
+                        MangaController.getInstance().setupMangaInfos(backupUrl, getInfosHandler);
+                    }
+
                     break;
 
                 default:

@@ -34,10 +34,6 @@ public class SearchController {
         public void setData(Document document) {
             quoteText = document.selectFirst("#LC1").text();
             backgroundUrl = document.selectFirst("#LC2").text();
-//
-//            Log.d("HHHHHHHHHHHHHHHHHHHHHH", "setData: " + quoteText);
-//            Log.d("HHHHHHHHHHHHHHHHHHHHHH", "setData: " + backgroundUrl);
-
         }
     };
 
