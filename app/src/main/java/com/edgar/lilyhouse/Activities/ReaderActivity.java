@@ -10,7 +10,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -51,7 +50,9 @@ public class ReaderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_reader);
 
         WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
-        width = wm.getDefaultDisplay().getWidth();
+        if (wm != null) {
+            width = wm.getDefaultDisplay().getWidth();
+        }
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
@@ -70,10 +71,10 @@ public class ReaderActivity extends AppCompatActivity {
         tvFullTitle.setText(fullTitleString);
         String authorsString = "";
         for (int i = 0; i < authorsStrings.length; i++) {
+            authorsString += (i == 0) ? "" : ", ";
             authorsString = authorsString.concat(authorsStrings[i]);
         }
-        tvAuthor.setText("Authors: " + authorsString);
-        Log.d(TAG, "onCreate: " + authorsString);
+        tvAuthor.setText(getString(R.string.drawer_authors_name, authorsString));
 
         constraintLayout = (ConstraintLayout)findViewById(R.id.my_drawer_content_layout);
         drawerLayout = (DrawerLayout) findViewById(R.id.my_drawer_layout);
@@ -111,7 +112,8 @@ public class ReaderActivity extends AppCompatActivity {
                             readerImageItem = gson.fromJson(jsonString, ReaderImageItem.class);
                             readerAdapter = new ReaderAdapter(ReaderActivity.this,
                                     readerImageItem.getPage_url(), width);
-                            tvTranslator.setText("Translator: " + readerImageItem.getTranslator());
+                            tvTranslator.setText(getString(R.string.drawer_translator_name,
+                                    readerImageItem.getTranslator()));
                             readerAdapter.setHasStableIds(true);
                             recyclerView.setAdapter(readerAdapter);
                             break;
@@ -144,7 +146,6 @@ public class ReaderActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK) && drawerLayout.isDrawerOpen(Gravity.END) ) {
-            Log.d(TAG, "onKeyDown: key back down");
             drawerLayout.closeDrawer(Gravity.END);
             return true;
         } else {

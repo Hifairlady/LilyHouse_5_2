@@ -119,13 +119,17 @@ public class CommentsFragment extends Fragment {
                     hotComments = new GsonBuilder().create().fromJson(jsonString, listType);
                     loadComments(lvHotCommentsContainer, hotComments);
                     btnLoadHotComments.setClickable(true);
+                    btnLoadHotComments.setText(R.string.check_hot_comments_string);
                     CommentController.getInstance().setupComments(allUrl, allJsonHandler);
                     break;
 
                 case R.integer.get_data_failed:
 
                     if (isFragDestroyed) return;
-                    Snackbar.make(lvHotCommentsContainer, "评论加载失败", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(lvHotCommentsContainer, R.string.loading_comments_failed_string,
+                            Snackbar.LENGTH_SHORT).show();
+                    btnLoadHotComments.setText(R.string.loading_comments_failed_string);
+                    btnLoadHotComments.setClickable(false);
                     break;
 
                 default:
@@ -156,13 +160,16 @@ public class CommentsFragment extends Fragment {
                     allComments = new GsonBuilder().create().fromJson(jsonString, listType);
                     loadComments(lvAllCommentsContainer, allComments);
                     btnLoadAllComments.setClickable(true);
-
+                    btnLoadAllComments.setText(R.string.check_all_comments_string);
                     break;
 
                 case R.integer.get_data_failed:
 
                     if (isFragDestroyed) return;
-                    Snackbar.make(lvAllCommentsContainer, "评论加载失败", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(lvAllCommentsContainer, R.string.loading_comments_failed_string,
+                            Snackbar.LENGTH_SHORT).show();
+                    btnLoadAllComments.setText(R.string.loading_comments_failed_string);
+                    btnLoadAllComments.setClickable(false);
                     break;
 
                 default:
@@ -245,14 +252,14 @@ public class CommentsFragment extends Fragment {
                 case R.id.btn_load_all_comments:
                     Intent allCommentIntent = new Intent(getContext(), CommentsActivity.class);
                     allCommentIntent.putExtra("queryUrl", allUrl);
-                    allCommentIntent.putExtra("titleString", "全部评论");
+                    allCommentIntent.putExtra("titleString", getString(R.string.all_comments_string_extra));
                     startActivity(allCommentIntent);
                     break;
 
                 case R.id.btn_load_all_hot_comments:
                     Intent hotCommentIntent = new Intent(getContext(), CommentsActivity.class);
                     hotCommentIntent.putExtra("queryUrl", hotUrl);
-                    hotCommentIntent.putExtra("titleString", "全部热评");
+                    hotCommentIntent.putExtra("titleString", getString(R.string.all_hot_comments_string_extra));
                     startActivity(hotCommentIntent);
                     break;
 

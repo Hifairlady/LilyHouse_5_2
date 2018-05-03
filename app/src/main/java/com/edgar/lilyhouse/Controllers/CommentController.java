@@ -88,7 +88,8 @@ public class CommentController {
             TextView tvFloor = (TextView)view.findViewById(R.id.tv_comment_floor_number);
             HtmlTextView htvInnerContent = (HtmlTextView)view.findViewById(R.id.tv_inner_comment_content);
 
-            tvFloor.setText("#" + String.valueOf(index + 1));
+            tvFloor.setText(context.getString(R.string.inner_comment_floor_num_string,
+                    index + 1));
             String nameHtml = "<b>" + masterCommentItems.get(index).getNickname() + "</b>";
             String textContent = nameHtml + ": " + masterCommentItems.get(index).getContent();
             String htmlContent = "<span>" + textContent + "</span>";

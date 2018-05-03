@@ -75,7 +75,6 @@ public class GridExAdapter extends BaseAdapter {
 
                 String fullTitleString = titleString + "/" + chapterItem.getData().get(position).getTitle() +
                         "/" + chapterItem.getData().get(position).getChapter_name();
-//                Log.d(TAG, "onClick: " + fullTitleString);
                 readerIntent.putExtra(context.getString(R.string.info_url_string_extra), urlString);
                 readerIntent.putExtra(context.getString(R.string.full_title_string_extra), fullTitleString);
                 readerIntent.putExtra(context.getString(R.string.authors_string_extra), authorsStrings);
@@ -90,7 +89,7 @@ public class GridExAdapter extends BaseAdapter {
         return itemView;
     }
 
-    void storeWatchState(String key, boolean hasWatched) {
+    private void storeWatchState(String key, boolean hasWatched) {
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(key, hasWatched);

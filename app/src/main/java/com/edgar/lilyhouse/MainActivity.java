@@ -372,7 +372,7 @@ public class MainActivity extends AppCompatActivity {
                         listAdapter.setHasStableIds(true);
                         recyclerView.setAdapter(listAdapter);
                     } else {
-                        Snackbar.make(recyclerView, "没有数据", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(recyclerView, R.string.no_data_string, Snackbar.LENGTH_SHORT).show();
                     }
                     break;
 
@@ -404,7 +404,7 @@ public class MainActivity extends AppCompatActivity {
                         listAdapter.notifyDataSetChanged();
                     } else {
                         isLoadingNextPage = true;
-                        Snackbar.make(recyclerView, "已全部加载", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(recyclerView, R.string.has_loaded_all_string, Snackbar.LENGTH_SHORT).show();
                     }
                     break;
 
@@ -444,7 +444,7 @@ public class MainActivity extends AppCompatActivity {
     private void exit() {
         if (!isExit) {
             isExit = true;
-            Snackbar.make(recyclerView, "再点击一次返回键退出", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(recyclerView, R.string.exit_double_click_string, Snackbar.LENGTH_SHORT).show();
             // exit after 2 seconds
             exitHandler.sendEmptyMessageDelayed(R.integer.exit_program, 2000);
         } else {

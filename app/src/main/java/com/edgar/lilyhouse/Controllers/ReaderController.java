@@ -1,7 +1,6 @@
 package com.edgar.lilyhouse.Controllers;
 
 import android.os.Handler;
-import android.util.Log;
 
 import com.edgar.lilyhouse.Utils.HtmlParser;
 
@@ -22,8 +21,6 @@ public class ReaderController {
     }
 
     public void setupImageUrl(String urlString, Handler handler) {
-
-        Log.d("URRRRRRRRRRRRRE", "setupImageUrl: " + urlString);
 
         HtmlParser htmlParser = new HtmlParser(urlString, handler);
         htmlParser.setDataFromDocument(imageData);

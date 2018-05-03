@@ -18,7 +18,6 @@ import com.edgar.lilyhouse.R;
 public class AuthorActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private MangaAdapter adapter;
 
 
     @Override
@@ -70,7 +69,7 @@ public class AuthorActivity extends AppCompatActivity {
             switch (msg.what) {
 
                 case R.integer.get_data_success:
-                    adapter = new MangaAdapter(AuthorActivity.this,
+                    MangaAdapter adapter = new MangaAdapter(AuthorActivity.this,
                             AuthorController.getInstance().getMangaItems(), true);
                     adapter.setHasStableIds(true);
                     adapter.setOnItemClickListener(itemClickListener);

@@ -178,12 +178,14 @@ public class ChaptersFragment extends Fragment {
         TextView tvTotal = view.findViewById(R.id.tv_total_chapters);
 
         final GridViewEx gridView = view.findViewById(R.id.chapter_gridview);
+        if (getContext() == null) return;
         GridExAdapter adapter = new GridExAdapter(getContext(), chapterItem, titleString, authorsStrings);
         adapters = Arrays.copyOf(adapters, adapters.length + 1);
         adapters[adapters.length - 1] = adapter;
 
         tvTitleView.setText(chapterItem.getTitle());
-        tvTotal.setText("共 " + chapterItem.getData().size() + " 章");
+        tvTotal.setText(getContext().getString(R.string.total_chapters_num, chapterItem.getData().size()));
+//        tvTotal.setText("共 " + chapterItem.getData().size() + " 章");
         gridView.setAdapter(adapter);
 
         lvContainer.addView(view);

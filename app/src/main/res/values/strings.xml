@@ -62,7 +62,23 @@
 
     <string name="request_permission_failed_string">申请设备存储空间访问权限失败</string>
     <string name="request_rationale_string">LilyHouse 将申请设备存储空间访问权限以便启用下载功能。您愿意授权吗？</string>
-    <string name="chapters_directory_string">目录</string>
+    <string name="drawer_chapter_viewpoints">吐槽</string>
     <string name="previous_chapter_button_string">上一章</string>
     <string name="next_chapter_button_string">下一章</string>
+
+
+    <string name="total_chapters_num">共 %d 章</string>
+    <string name="comment_image_detail_title">图片详情</string>
+    <string name="network_error_string">网络错误</string>
+    <string name="drawer_translator_name">Translator: %s</string>
+    <string name="drawer_authors_name">Authors: %s</string>
+    <string name="search_result_count_string">共 %d 条搜索结果</string>
+    <string name="cover_author_string">作者: %s</string>
+    <string name="cover_types_string">类别: %s</string>
+    <string name="inner_comment_floor_num_string">#%d</string>
+    <string name="loading_comments_failed_string">评论加载失败</string>
+    <string name="all_hot_comments_string_extra">全部热评</string>
+    <string name="all_comments_string_extra">全部评论</string>
+    <string name="has_loaded_all_string">已全部加载</string>
+    <string name="exit_double_click_string">再点击一次返回键退出</string>
 </resources>

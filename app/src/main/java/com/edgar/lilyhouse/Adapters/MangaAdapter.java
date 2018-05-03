@@ -70,12 +70,12 @@ public class MangaAdapter extends UltimateViewAdapter<MangaAdapter.MangaViewHold
         final MangaItem mangaItem = mangaItems.get(position);
 
         if (!isGridOn) {
-            holder.tvTitle.setText("标题: " + mangaItem.getName());
-            holder.tvAuthor.setText("作者: " + mangaItem.getAuthors());
-            holder.tvType.setText("类别: " + mangaItem.getTypes());
+            holder.tvTitle.setText(mangaItem.getName());
+            holder.tvAuthor.setText(context.getString(R.string.cover_author_string, mangaItem.getAuthors()));
+            holder.tvType.setText(context.getString(R.string.cover_types_string, mangaItem.getTypes()));
         } else {
             holder.tvTitle.setText(mangaItem.getName());
-            holder.tvAuthor.setText("作者: " + mangaItem.getAuthors());
+            holder.tvAuthor.setText(context.getString(R.string.cover_author_string, mangaItem.getAuthors()));
         }
 
         if (mangaItem.getStatus().equals(context.getString(R.string.chapter_is_serializing))) {

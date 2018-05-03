@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -33,14 +32,11 @@ import java.util.Date;
 
 public class MangaActivity extends AppCompatActivity {
 
-    private static final String TAG = MangaActivity.class.getSimpleName() + "WWWWWWWWWWWWWWWWWW";
-
     private String urlString, backupUrl, titleString;
 
     private boolean firstTry = true;
 
     private ViewPager viewPager;
-    private ViewPagerAdapter pagerAdapter;
     private LinearLayout authorContainer;
 
     private ArrayList<Fragment> fragments = new ArrayList<>();
@@ -84,14 +80,11 @@ public class MangaActivity extends AppCompatActivity {
 
         viewPager = (ViewPager) findViewById(R.id.info_view_pager);
 
-
-        Log.d(TAG, "onCreate: " + urlString);
         MangaController.getInstance().setupMangaInfos(urlString, getInfosHandler);
     }
 
     private void setupFragments() {
         fragments.clear();
-        Log.d(TAG, "setupFragments: " + MangaController.getInstance().getRelatedUrl());
         fragments.add(RelatedFragment.newInstance(MangaController.getInstance().getRelatedUrl()));
         fragments.add(ChaptersFragment.newInstance(urlString, titleString, authorsStrings));
 
@@ -110,7 +103,7 @@ public class MangaActivity extends AppCompatActivity {
 
         fragments.add(CommentsFragment.newInstance(allCommentUrl, hotCommentUrl));
 
-        pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), fragments);
+        ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(pagerAdapter);
         TabLayout tabLayout = findViewById(R.id.info_tab_layout);
         tabLayout.removeAllTabs();
@@ -140,7 +133,6 @@ public class MangaActivity extends AppCompatActivity {
                     tvLabelTime.setText(MangaController.getInstance().getTimeString());
                     tvLabelStatus.setText(MangaController.getInstance().getStatusString());
                     tvLabelTypes.setText(MangaController.getInstance().getTypeString());
-//                    imageUtil.setImageView(ivCover, MangaController.getInstance().getCoverUrl());
                     GlideUtil.setImageView(MangaActivity.this, ivCover, MangaController.getInstance().getCoverUrl());
                     authorContainer.removeAllViews();
                     authorsStrings = new String[MangaController.getInstance().getAuthorItems().size()];
@@ -155,7 +147,6 @@ public class MangaActivity extends AppCompatActivity {
                 case R.integer.get_data_failed:
                     if (firstTry) {
                         firstTry = false;
-                        Log.d(TAG, "handleMessage: " + backupUrl);
                         if (backupUrl == null || backupUrl.length() == 0) break;
                         MangaController.getInstance().setupMangaInfos(backupUrl, getInfosHandler);
                     }

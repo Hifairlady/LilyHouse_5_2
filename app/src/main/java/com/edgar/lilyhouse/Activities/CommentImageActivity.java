@@ -23,10 +23,13 @@ public class CommentImageActivity extends AppCompatActivity {
         urlString = getIntent().getStringExtra(getString(R.string.info_url_string_extra));
 
         WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
-        int width = wm.getDefaultDisplay().getWidth();
+        int width = 0;
+        if (wm != null) {
+            width = wm.getDefaultDisplay().getWidth();
+        }
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.my_toolbar);
-        toolbar.setTitle("图片详情");
+        toolbar.setTitle(R.string.comment_image_detail_title);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

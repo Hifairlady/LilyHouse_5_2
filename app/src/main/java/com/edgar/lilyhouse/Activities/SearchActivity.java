@@ -170,9 +170,8 @@ public class SearchActivity extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case R.integer.get_data_success:
-                    String countString = "共 " + SearchController.getInstance()
-                            .getSearchResultItems().size() + " 条搜索结果";
-                    tvSearchCount.setText(countString);
+                    tvSearchCount.setText(getString(R.string.search_result_count_string,
+                            SearchController.getInstance().getSearchResultItems().size()));
                     tvSearchCount.setVisibility(View.VISIBLE);
                     lvResultContainer.removeAllViews();
                     nestedScrollView.scrollTo(0, 0);

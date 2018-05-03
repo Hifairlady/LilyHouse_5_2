@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
 import com.edgar.lilyhouse.Adapters.CommentAdapter;
@@ -88,8 +87,8 @@ public class CommentsActivity extends AppCompatActivity {
                 isLoadingNextPage = true;
                 String urlString = getUrlString(queryUrl, curPage);
                 CommentController.getInstance().setupCommentsList(urlString, getCommentsHandler);
-                Log.d(TAG, "onRefresh: " + urlString);
-                Snackbar.make(recyclerView, "Loading next page...", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(recyclerView, getString(R.string.loading_next_page_string),
+                        Snackbar.LENGTH_SHORT).show();
 
             }
         });
@@ -157,7 +156,7 @@ public class CommentsActivity extends AppCompatActivity {
                 case R.integer.get_data_failed:
 
                     if (isActivityDestroyed) return;
-                    Snackbar.make(recyclerView, "Network Error!", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(recyclerView, R.string.network_error_string, Snackbar.LENGTH_SHORT).show();
                     break;
 
                 default:

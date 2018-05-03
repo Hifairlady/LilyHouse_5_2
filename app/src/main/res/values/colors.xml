@@ -11,4 +11,5 @@
     <color name="colorWhite">#FFFFFFFF</color>
     <color name="colorBlack">#000000</color>
     <color name="defaultBgColor">#FAFAFAFA</color>
+    <color name="light_gray">#dddddddd</color>
 </resources>
