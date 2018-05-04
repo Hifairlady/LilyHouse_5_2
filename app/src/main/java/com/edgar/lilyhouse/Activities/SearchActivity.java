@@ -9,19 +9,18 @@ import android.os.Message;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.edgar.lilyhouse.Adapters.SearchAdapter;
 import com.edgar.lilyhouse.Controllers.SearchController;
 import com.edgar.lilyhouse.Items.SearchResultItem;
 import com.edgar.lilyhouse.R;
-import com.edgar.lilyhouse.Utils.GlideUtil;
 
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -41,6 +40,9 @@ public class SearchActivity extends AppCompatActivity {
     private boolean isSearching = false;
     NestedScrollView nestedScrollView;
 
+    private RecyclerView recyclerView;
+    private SearchAdapter searchAdapter;
+
     private String searchUrl;
 
     @Override
@@ -51,9 +53,11 @@ public class SearchActivity extends AppCompatActivity {
         tvQuote = findViewById(R.id.tv_search_quote);
         tvSearchCount = findViewById(R.id.tv_search_count);
         tvSearchCount.setVisibility(View.GONE);
-        lvResultContainer = findViewById(R.id.lv_search_result_container);
         searchView = findViewById(R.id.my_search_view);
-        nestedScrollView = findViewById(R.id.search_scroll_view);
+        recyclerView = findViewById(R.id.rv_search_result);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
 
         setupQuoteText();
         customSearchView();
@@ -87,7 +91,7 @@ public class SearchActivity extends AppCompatActivity {
         if (searchTextView == null) {
             return;
         }
-//        searchTextView.setTextSize(16.f);
+
         searchTextView.setTextAppearance(SearchActivity.this, R.style.SearchTextStyle);
         searchTextView.setTextColor(getResources().getColor(R.color.primary_text));
         searchTextView.setHintTextColor(getResources().getColor(R.color.secondary_text));
@@ -173,13 +177,11 @@ public class SearchActivity extends AppCompatActivity {
                     tvSearchCount.setText(getString(R.string.search_result_count_string,
                             SearchController.getInstance().getSearchResultItems().size()));
                     tvSearchCount.setVisibility(View.VISIBLE);
-                    lvResultContainer.removeAllViews();
-                    nestedScrollView.scrollTo(0, 0);
-                    for (int i = 0; i < SearchController.getInstance()
-                            .getSearchResultItems().size(); i++) {
-                        addViewToContainer(lvResultContainer,
-                                SearchController.getInstance().getSearchResultItems().get(i));
-                    }
+                    searchAdapter = new SearchAdapter(SearchActivity.this,
+                            SearchController.getInstance().getSearchResultItems());
+                    searchAdapter.setItemClickListener(itemClickListener);
+                    recyclerView.setAdapter(searchAdapter);
+
                     isSearching = false;
                     break;
 
@@ -192,54 +194,18 @@ public class SearchActivity extends AppCompatActivity {
         }
     };
 
-    private void addViewToContainer(LinearLayout lvContainer, final SearchResultItem resultItem) {
-
-        View view = LayoutInflater.from(this).inflate(R.layout.item_search_result, null);
-
-        CardView cardView = view.findViewById(R.id.search_item_root);
-        TextView tvTitle, tvAuthors, tvTypes, tvTime, tvChapter;
-        ImageView ivCover, ivFinishedLogo;
-
-        tvTitle = view.findViewById(R.id.tv_search_item_title);
-        tvAuthors = view.findViewById(R.id.tv_search_item_authors);
-        tvTypes = view.findViewById(R.id.tv_search_item_types);
-        tvTime = view.findViewById(R.id.tv_search_item_time);
-        tvChapter = view.findViewById(R.id.tv_search_item_chapter);
-        ivCover = view.findViewById(R.id.cover_image);
-        ivFinishedLogo = view.findViewById(R.id.cover_finished_logo);
-
-        String urlString = resultItem.getCover();
-        if (!urlString.startsWith("https")) {
-            urlString = "https://images.dmzj.com/" + urlString;
+    private SearchAdapter.SearchItemClickListener itemClickListener = new SearchAdapter.SearchItemClickListener() {
+        @Override
+        public void onItemClick(int position) {
+            SearchResultItem resultItem = SearchController.getInstance().getSearchResultItems().get(position);
+            Intent infoIntent = new Intent(SearchActivity.this, MangaActivity.class);
+            infoIntent.putExtra(getString(R.string.info_title_string_extra), resultItem.getName());
+            String urlString = "https://m.dmzj.com/info/" + resultItem.getId() + ".html";
+            String backuUrl = "https://m.dmzj.com/info/" + resultItem.getComic_py() + ".html";
+            infoIntent.putExtra(getString(R.string.info_url_string_extra), urlString);
+            infoIntent.putExtra(getString(R.string.back_up_url_string_extra), backuUrl);
+            startActivity(infoIntent);
         }
-        GlideUtil.setImageView(SearchActivity.this, ivCover, urlString);
+    };
 
-        tvTitle.setText(resultItem.getName());
-        tvAuthors.setText(resultItem.getAuthors());
-        tvTypes.setText(resultItem.getTypes());
-        tvChapter.setText(resultItem.getLast_update_chapter_name());
-        String dateString = getDateString(resultItem.getLast_updatetime());
-        tvTime.setText(dateString);
-
-        if (resultItem.getStatus().equals("连载中")) {
-            ivFinishedLogo.setVisibility(View.GONE);
-        } else {
-            ivFinishedLogo.setVisibility(View.VISIBLE);
-        }
-
-        cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent infoIntent = new Intent(SearchActivity.this, MangaActivity.class);
-                infoIntent.putExtra(getString(R.string.info_title_string_extra), resultItem.getName());
-                String urlString = "https://m.dmzj.com/info/" + resultItem.getId() + ".html";
-                String backuUrl = "https://m.dmzj.com/info/" + resultItem.getComic_py() + ".html";
-                infoIntent.putExtra(getString(R.string.info_url_string_extra), urlString);
-                infoIntent.putExtra(getString(R.string.back_up_url_string_extra), backuUrl);
-                startActivity(infoIntent);
-            }
-        });
-
-        lvContainer.addView(view);
-    }
 }
